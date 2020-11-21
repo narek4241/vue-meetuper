@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import router from './router';
 
 import App from './App.vue';
 import AppDropdown from './components/shared/AppDropdown';
@@ -25,5 +26,6 @@ Vue.filter('formatDate', function(value, formatType = 'LL') {
 });
 
 new Vue({
+  router,
   render: (h) => h(App),
 }).$mount('#app');
