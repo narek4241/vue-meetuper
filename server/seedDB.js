@@ -3,7 +3,7 @@ const Meetup = require('./models/meetups');
 const User = require('./models/users');
 const Post = require('./models/posts');
 const Thread = require('./models/threads');
-const Category = require('./models/categories')
+const Category = require('./models/categories');
 
 const data = require('./data.js');
 const config = require('./config/dev');
@@ -19,33 +19,33 @@ class DB {
   }
 
   async cleanDb() {
-     for ( let model of this.models ) {
-      await model.deleteMany({}, () => {})
-      console.log(`Data for model ${model.collection.collectionName} Deleted!`)
+    for (let model of this.models) {
+      await model.deleteMany({}, () => {});
+      console.log(`Data for model ${model.collection.collectionName} Deleted!`);
     }
   }
 
   async pushDataToDb() {
     await this.categories.forEach(async (category) => {
-       const newCategory = new Category(category);
-       await newCategory.save(() => {});
-    })
+      const newCategory = new Category(category);
+      await newCategory.save(() => {});
+    });
 
-    await this.users.forEach(async user => {
-      await (new User(user)).save(() => {})
-    })
+    await this.users.forEach(async (user) => {
+      await new User(user).save(() => {});
+    });
 
-    await this.meetups.forEach(async meetup => {
-      await (new Meetup(meetup)).save(() => {})
-    })
+    await this.meetups.forEach(async (meetup) => {
+      await new Meetup(meetup).save(() => {});
+    });
 
-    await this.threads.forEach(async thread => {
-      await (new Thread(thread)).save(() => {})
-    })
+    await this.threads.forEach(async (thread) => {
+      await new Thread(thread).save(() => {});
+    });
 
-    await this.posts.forEach(async post => {
-      await (new Post(post)).save(() => {})
-    })
+    await this.posts.forEach(async (post) => {
+      await new Post(post).save(() => {});
+    });
 
     console.log('Database Populated!');
   }
@@ -56,10 +56,11 @@ class DB {
   }
 }
 
-mongoose.connect(config.DB_URI, { useNewUrlParser: true })
+mongoose
+  .connect(config.DB_URI, { useNewUrlParser: true })
   .then(async () => {
     const db = new DB();
     await db.seedDb();
-    console.log('You can close connection now!')
+    console.log('You can close connection now!');
   })
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
