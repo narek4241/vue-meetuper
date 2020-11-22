@@ -69,7 +69,7 @@
             <a>Sign In With Google</a> &nbsp;·&nbsp;
             <router-link :to="{ name: 'PageRegister' }">Sign Up</router-link>
             &nbsp;·&nbsp;
-            <a href="../">Need Help?</a>
+            <a href="..">Need Help?</a>
           </p>
         </div>
       </div>

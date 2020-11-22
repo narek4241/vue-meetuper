@@ -154,7 +154,7 @@
           <p class="has-text-grey">
             <router-link :to="{ name: 'PageLogin' }">Login</router-link>
             &nbsp;·&nbsp; <a>Sign Up With Google</a> &nbsp;·&nbsp;
-            <a href="../">Need Help?</a>
+            <a href="..">Need Help?</a>
           </p>
         </div>
       </div>
