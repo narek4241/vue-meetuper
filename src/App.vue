@@ -2,7 +2,7 @@
   <div id="app">
     <TheNavbar />
     <div class="page-wrapper">
-      <router-view />
+      <router-view class="page-content" />
     </div>
     <TheFooter />
   </div>
@@ -35,6 +35,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  .page-content {
+    width: 100%;
+  }
 }
 
 .bold {

@@ -1,12 +1,14 @@
 import Vue from 'vue';
 import router from './router';
 import store from './store';
+import vuelidate from 'vuelidate';
 
 import App from './App.vue';
 import AppDropdown from './components/shared/AppDropdown';
 import AppHero from './components/shared/AppHero';
 import AppSpinner from './components/shared/AppSpinner';
 
+// #task #res usage opt
 import moment from 'moment';
 
 Vue.config.productionTip = false;
@@ -16,7 +18,10 @@ Vue.component('AppSpinner', AppSpinner);
 Vue.component('AppHero', AppHero);
 Vue.component('AppDropdown', AppDropdown);
 
-// needsRes_syntax(afterwards used)
+// #task #findOut usage
+Vue.use(vuelidate);
+
+// #task #findOut2.5 usage
 Vue.filter('capitalize', function(value) {
   if (value && typeof value === 'string') {
     return value.charAt(0).toUpperCase() + value.slice(1);
@@ -32,5 +37,6 @@ Vue.filter('formatDate', function(value, formatType = 'LL') {
 new Vue({
   router,
   store,
+  vuelidate,
   render: (h) => h(App),
 }).$mount('#app');

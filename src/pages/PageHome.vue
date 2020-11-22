@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div>
     <AppHero />
     <div v-if="pageLoader_isDataLoaded" class="container">
       <section class="section">
@@ -82,7 +82,9 @@ export default {
 </script>
 
 <style scoped>
-.app-container {
-  width: 100%;
+/* #note possible side-effects */
+.row,
+.columns {
+  flex-wrap: wrap;
 }
 </style>

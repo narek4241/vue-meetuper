@@ -5,6 +5,8 @@ import PageHome from '../pages/PageHome';
 import PageMeetupDetail from '../pages/PageMeetupDetail';
 import PageMeetupFind from '../pages/PageMeetupFind';
 import PageNotFound from '../pages/PageNotFound';
+import PageRegister from '../pages/PageRegister';
+import PageLogin from '../pages/PageLogin';
 
 Vue.use(Router);
 
@@ -29,6 +31,16 @@ const router = new Router({
       path: '*',
       name: 'PageNotFound',
       component: PageNotFound,
+    },
+    {
+      path: '/register',
+      name: 'PageRegister',
+      component: PageRegister,
+    },
+    {
+      path: '/login',
+      name: 'PageLogin',
+      component: PageLogin,
     },
   ],
   mode: 'history',
