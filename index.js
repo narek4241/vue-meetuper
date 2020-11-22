@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { MONGO_URI, PORT } = require('./config');
+const { MONGO_URI, PORT, NODE_ENV } = require('./config');
 
 require('./models/meetups');
 require('./models/users');
