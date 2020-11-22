@@ -67,5 +67,6 @@ mongoose
     const db = new DB();
     await db.seedDb();
     console.log('You can close connection now!');
+    process.exit(0);
   })
   .catch((err) => console.log(err));
