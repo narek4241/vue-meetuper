@@ -41,29 +41,25 @@
 </template>
 
 <script>
-import axios from 'axios';
 import CategoryItem from '../components/CategoryItem';
 import MeetupItem from '../components/MeetupItem';
 
 export default {
   components: { CategoryItem, MeetupItem },
-  data() {
-    return {
-      categories: [],
-      meetups: [],
-    };
+
+  computed: {
+    meetups() {
+      return this.$store.state.meetups;
+    },
+    categories() {
+      return this.$store.state.categories;
+    },
   },
 
   created() {
-    axios.get('/api/v1/categories').then((res) => {
-      this.categories = res.data;
-    });
-
-    axios.get('/api/v1/meetups').then((res) => {
-      this.meetups = res.data;
-    });
+    this.$store.dispatch('fetchMeetups');
+    this.$store.dispatch('fetchCategories');
   },
-  methods: {},
 };
 </script>
 
