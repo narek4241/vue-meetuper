@@ -42,9 +42,7 @@ module.exports = {
       shortInfo: "Just some short info, I don't kow just be yourself.",
       createdAt: moment().toISOString(),
       updatedAt: moment().toISOString(),
-      startDate: moment()
-        .add(2, 'days')
-        .toISOString(),
+      startDate: moment().add(2, 'days').toISOString(),
       timeFrom: '14:00',
       timeTo: '18:00',
       joinedPeopleCount: 1,
@@ -64,9 +62,7 @@ module.exports = {
       shortInfo: "Just some short info, I don't kow just be yourself.",
       createdAt: moment().toISOString(),
       updatedAt: moment().toISOString(),
-      startDate: moment()
-        .add(7, 'days')
-        .toISOString(),
+      startDate: moment().add(7, 'days').toISOString(),
       timeFrom: '08:00',
       timeTo: '10:00',
       joinedPeopleCount: 2,
@@ -86,9 +82,7 @@ module.exports = {
       shortInfo: "Just some short info, I don't kow just be yourself.",
       createdAt: moment().toISOString(),
       updatedAt: moment().toISOString(),
-      startDate: moment()
-        .add(7, 'days')
-        .toISOString(),
+      startDate: moment().add(7, 'days').toISOString(),
       timeFrom: '08:00',
       timeTo: '10:00',
       joinedPeopleCount: 2,
@@ -108,9 +102,7 @@ module.exports = {
       shortInfo: "Just some short info, I don't kow just be yourself.",
       createdAt: moment().toISOString(),
       updatedAt: moment().toISOString(),
-      startDate: moment()
-        .add(7, 'days')
-        .toISOString(),
+      startDate: moment().add(7, 'days').toISOString(),
       timeFrom: '08:00',
       timeTo: '10:00',
       joinedPeopleCount: 2,
@@ -130,9 +122,7 @@ module.exports = {
       shortInfo: "Just some short info, I don't kow just be yourself.",
       createdAt: moment().toISOString(),
       updatedAt: moment().toISOString(),
-      startDate: moment()
-        .add(7, 'days')
-        .toISOString(),
+      startDate: moment().add(7, 'days').toISOString(),
       timeFrom: '08:00',
       timeTo: '10:00',
       joinedPeopleCount: 2,
@@ -152,9 +142,7 @@ module.exports = {
       shortInfo: "Just some short info, I don't kow just be yourself.",
       createdAt: moment().toISOString(),
       updatedAt: moment().toISOString(),
-      startDate: moment()
-        .add(7, 'days')
-        .toISOString(),
+      startDate: moment().add(7, 'days').toISOString(),
       timeFrom: '08:00',
       timeTo: '10:00',
       joinedPeopleCount: 2,

@@ -6,7 +6,7 @@ const Thread = require('./models/threads');
 const Category = require('./models/categories');
 
 const data = require('./data.js');
-const config = require('./config/dev');
+const { MONGO_URI } = require('./config');
 
 class DB {
   constructor() {
@@ -51,13 +51,18 @@ class DB {
   }
 
   async seedDb() {
+    const category = await Category.findById('5fbace0a4ca7d538424fc356');
+    if (category) {
+      return;
+    }
+
     await this.cleanDb();
     await this.pushDataToDb();
   }
 }
 
 mongoose
-  .connect(config.DB_URI, { useNewUrlParser: true })
+  .connect(MONGO_URI, { useNewUrlParser: true })
   .then(async () => {
     const db = new DB();
     await db.seedDb();
