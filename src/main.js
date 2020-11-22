@@ -5,11 +5,14 @@ import store from './store';
 import App from './App.vue';
 import AppDropdown from './components/shared/AppDropdown';
 import AppHero from './components/shared/AppHero';
+import AppSpinner from './components/shared/AppSpinner';
 
 import moment from 'moment';
 
 Vue.config.productionTip = false;
 
+// #task #findOut usage (below 1)
+Vue.component('AppSpinner', AppSpinner);
 Vue.component('AppHero', AppHero);
 Vue.component('AppDropdown', AppDropdown);
 

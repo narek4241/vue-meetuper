@@ -12,7 +12,7 @@ export default {
   actions: {
     fetchMeetups({ state, commit }) {
       commit('setItems', { resource: 'meetups', item: [] }, { root: true });
-      axios.get('/api/v1/meetups').then((res) => {
+      return axios.get('/api/v1/meetups').then((res) => {
         const meetups = res.data;
         commit(
           'setItems',
@@ -26,7 +26,7 @@ export default {
 
     fetchMeetup({ state, commit }, meetupId) {
       commit('setItem', { resource: 'meetups', item: {} }, { root: true });
-      axios.get(`/api/v1/meetups/${meetupId}`).then((res) => {
+      return axios.get(`/api/v1/meetups/${meetupId}`).then((res) => {
         // #task #findOut mutating state directly, works, why does it not get error, ex. below
         // context.state.meetup = res.data;
         const meetup = res.data;

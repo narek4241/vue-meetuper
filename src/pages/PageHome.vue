@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="app-container">
     <AppHero />
-    <div class="container">
+    <div v-if="pageLoader_isDataLoaded" class="container">
       <section class="section">
         <div class="m-b-lg">
           <h1 class="title is-inline">Featured Meetups in "Location"</h1>
@@ -37,16 +37,23 @@
         </div>
       </section>
     </div>
+    <div v-else class="container">
+      <app-spinner />
+    </div>
   </div>
 </template>
 
 <script>
 import CategoryItem from '../components/CategoryItem';
 import MeetupItem from '../components/MeetupItem';
+import AppSpinner from '../components/shared/AppSpinner';
 import { mapState, mapActions } from 'vuex';
+import pageLoader from '../mixins/pageLoader';
 
 export default {
-  components: { CategoryItem, MeetupItem },
+  components: { CategoryItem, MeetupItem, AppSpinner },
+
+  mixins: [pageLoader],
 
   computed: {
     ...mapState({
@@ -56,8 +63,15 @@ export default {
   },
 
   created() {
-    this.fetchMeetups();
-    this.fetchCategories();
+    Promise.all([this.fetchMeetups(), this.fetchCategories()])
+      .then(() => {
+        this.isDataLoaded = true;
+        this.pageLoader_resolveData();
+      })
+      .catch((err) => {
+        console.error(err);
+        this.pageLoader_resolveData();
+      });
   },
   methods: {
     // #task #res explain '...' syntax
@@ -67,4 +81,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.app-container {
+  width: 100%;
+}
+</style>

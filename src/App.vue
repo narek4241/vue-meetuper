@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <TheNavbar />
-    <router-view />
+    <div class="page-wrapper">
+      <router-view />
+    </div>
     <TheFooter />
   </div>
 </template>
@@ -27,6 +29,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+
+.page-wrapper {
+  min-height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -37,10 +47,12 @@ export default {
   background-attachment: fixed;
 }
 .hero {
+  width: 100%;
   position: relative;
 }
 .hero-body {
   padding: 3rem 1.5rem;
+  width: 100%;
 }
 .hero-bg {
   background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),

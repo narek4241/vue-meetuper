@@ -9,7 +9,7 @@ export default {
 
   actions: {
     fetchThreads({ state, commit }, meetupId) {
-      axios.get(`/api/v1/threads?meetupId=${meetupId}`).then((res) => {
+      return axios.get(`/api/v1/threads?meetupId=${meetupId}`).then((res) => {
         const threads = res.data;
         commit(
           'setItems',
