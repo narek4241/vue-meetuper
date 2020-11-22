@@ -26,33 +26,28 @@ class DB {
   }
 
   async pushDataToDb() {
-    await this.categories.forEach(async (category) => {
-      const newCategory = new Category(category);
-      await newCategory.save(() => {});
-    });
+    await Category.insertMany(this.categories);
+    console.log('Category Populated!');
 
-    await this.users.forEach(async (user) => {
-      await new User(user).save(() => {});
-    });
+    await User.insertMany(this.users);
+    console.log('User Populated!');
 
-    await this.meetups.forEach(async (meetup) => {
-      await new Meetup(meetup).save(() => {});
-    });
+    await Meetup.insertMany(this.meetups);
+    console.log('Meetup Populated!');
 
-    await this.threads.forEach(async (thread) => {
-      await new Thread(thread).save(() => {});
-    });
+    await Thread.insertMany(this.threads);
+    console.log('Thread Populated!');
 
-    await this.posts.forEach(async (post) => {
-      await new Post(post).save(() => {});
-    });
+    await Post.insertMany(this.posts);
+    console.log('Post Populated!');
 
     console.log('Database Populated!');
   }
 
   async seedDb() {
-    const category = await Category.findById('5fbace0a4ca7d538424fc356');
+    const category = await Category.findById('5fbae897fd33096483eaf97e');
     if (category) {
+      console.log('Nulkkkk');
       return;
     }
 
