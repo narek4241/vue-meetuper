@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const config = require('./config/dev');
+const { MONGO_URI, PORT } = require('./config');
 
 require('./models/meetups');
 require('./models/users');
@@ -16,7 +16,7 @@ const meetupsRoutes = require('./routes/meetups'),
   categoriesRoutes = require('./routes/categories');
 
 mongoose
-  .connect(config.DB_URI, { useNewUrlParser: true })
+  .connect(MONGO_URI, { useNewUrlParser: true })
   .then(() => console.log('DB Connected!'))
   .catch((err) => console.log(err));
 
@@ -30,8 +30,15 @@ app.use('/api/v1/posts', postsRoutes);
 app.use('/api/v1/threads', threadsRoutes);
 app.use('/api/v1/categories', categoriesRoutes);
 
-const PORT = process.env.PORT || 3001;
+if (NODE_ENV === 'development') {
+  app.get('/', (req, res) => res.status(200).send('Hello world'));
+} else if (NODE_ENV === 'production') {
+  app.use(express.static('client/dist'));
+  app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
+  });
+}
 
-app.listen(PORT, function() {
+app.listen(PORT, function () {
   console.log('App is running on port: ' + PORT);
 });
