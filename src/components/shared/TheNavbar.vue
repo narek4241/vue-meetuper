@@ -23,9 +23,9 @@
           Home
         </router-link>
 
-        <a class="navbar-item">
+        <router-link :to="{ name: 'PageMeetupFind' }" class="navbar-item">
           Find
-        </a>
+        </router-link>
 
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link">

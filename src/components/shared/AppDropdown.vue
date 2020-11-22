@@ -22,7 +22,7 @@
         <a href="#" class="dropdown-item">
           Other dropdown item
         </a>
-        <hr class="dropdown-divider">
+        <hr class="dropdown-divider" />
         <a href="#" class="dropdown-item">
           With a divider
         </a>
@@ -32,9 +32,7 @@
 </template>
 
 <script>
-  export default {
-  }
+export default {};
 </script>
 
-<style>
-</style>
+<style></style>

@@ -9,7 +9,11 @@
           <button class="button is-primary is-pulled-right m-r-sm">
             Create Meetups
           </button>
-          <button class="button is-primary is-pulled-right m-r-sm">All</button>
+          <router-link
+            :to="{ name: 'PageMeetupFind' }"
+            class="button is-primary is-pulled-right m-r-sm"
+            >All</router-link
+          >
         </div>
 
         <div class="row columns">
