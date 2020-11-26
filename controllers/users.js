@@ -40,8 +40,6 @@ exports.login = async (req, res, next) => {
     res.status(422).send('password is required');
   }
 
-  // const currentUser
-
   return passport.authenticate('local', (err, passportUser) => {
     if (err) {
       return next(err);
@@ -62,4 +60,9 @@ exports.login = async (req, res, next) => {
       });
     }
   })(req, res, next);
+};
+
+exports.logout = (req, res) => {
+  req.logout();
+  return res.json({ status: 'Session destroyed' });
 };

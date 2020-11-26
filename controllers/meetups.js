@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const Meetup = require('../models/meetups');
 
 exports.getMeetups = function (req, res) {
@@ -30,4 +31,8 @@ exports.getMeetupById = function (req, res) {
 
       return res.json(meetup);
     });
+};
+
+exports.getSecret = (req, res) => {
+  return res.json({ secret: 'I am Secret message' });
 };
