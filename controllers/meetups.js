@@ -1,6 +1,6 @@
 const Meetup = require('../models/meetups');
 
-exports.getMeetups = function(req, res) {
+exports.getMeetups = function (req, res) {
   Meetup.find({})
     .populate('category')
     .populate('joinedPeople')
@@ -13,7 +13,7 @@ exports.getMeetups = function(req, res) {
     });
 };
 
-exports.getMeetupById = function(req, res) {
+exports.getMeetupById = function (req, res) {
   const { id } = req.params;
 
   Meetup.findById(id)

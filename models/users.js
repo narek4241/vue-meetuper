@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 const Meetup = require('./meetups');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -25,7 +25,8 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    min: [4, 'Too short, min is 4 characters'],
+    // #task #afterwards replace min & max with minlength & maxlength opt0
+    minlength: [4, 'Too short, min is 4 characters'],
     max: [32, 'Too long, max is 32 characters'],
     required: 'Password is required',
   },
