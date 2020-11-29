@@ -59,7 +59,7 @@
             Account
           </a>
           <div class="navbar-dropdown">
-            <a href="#" class="navbar-item">
+            <a @click.prevent="toProfilePage" href="#" class="navbar-item">
               Profile
             </a>
             <hr class="navbar-divider" />
@@ -99,6 +99,9 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('auth/logout').catch((err) => console.error(err));
+    },
+    toProfilePage() {
+      this.$router.push('/profile');
     },
   },
 };
