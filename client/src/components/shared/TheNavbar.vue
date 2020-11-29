@@ -17,7 +17,7 @@
       </a>
     </div>
 
-    <div id="navbarBasicExample" class="navbar-menu">
+    <div id="navbarBasicExample" class="navbar-menu is-active">
       <div class="navbar-start">
         <router-link :to="'/'" class="navbar-item">
           Home
@@ -52,6 +52,23 @@
 
       <div class="navbar-end">
         <div class="navbar-item">
+          <div v-if="user">Welcome @{{ user.username }}</div>
+        </div>
+        <div v-if="user" class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            Account
+          </a>
+          <div class="navbar-dropdown">
+            <a href="#" class="navbar-item">
+              Profile
+            </a>
+            <hr class="navbar-divider" />
+            <a class="navbar-item">
+              Logout
+            </a>
+          </div>
+        </div>
+        <div v-else class="navbar-item has-dropdown ">
           <div class="buttons">
             <router-link
               :to="{ name: 'PageRegister' }"
@@ -70,7 +87,15 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters } from 'vuex';
+
+export default {
+  computed: {
+    ...mapGetters({
+      user: 'auth/user',
+    }),
+  },
+};
 </script>
 
 <style scoped></style>

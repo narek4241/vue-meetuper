@@ -17,6 +17,10 @@ export default {
     TheNavbar,
     TheFooter,
   },
+
+  created() {
+    this.$store.dispatch('auth/getAuthUser');
+  },
 };
 </script>
 

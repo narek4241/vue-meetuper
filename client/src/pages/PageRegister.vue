@@ -223,7 +223,10 @@ export default {
 
   methods: {
     register() {
-      this.$store.dispatch('auth/registerUser', this.form);
+      this.$store
+        .dispatch('auth/registerUser', this.form)
+        .then(() => this.$router.push('/login'))
+        .catch((err) => console.error(err));
     },
   },
 };

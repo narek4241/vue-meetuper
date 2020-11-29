@@ -1,4 +1,5 @@
 exports.onlyAuthUser = (req, res, next) => {
+  // #note isAuthenticated() is built in function, (also: req.login(), req.logout())
   if (req.isAuthenticated()) {
     return next();
   }

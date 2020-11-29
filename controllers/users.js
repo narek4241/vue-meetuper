@@ -11,6 +11,17 @@ exports.getUsers = function (req, res) {
   });
 };
 
+exports.getCurrentUser = function (req, res, next) {
+  // #task #findOut from where 'req.user' comes from
+  const user = req.user;
+
+  if (!user) {
+    return res.sendStatus(422);
+  }
+
+  return res.json(user);
+};
+
 exports.register = async (req, res) => {
   try {
     const currentUser = await User.findOne({ email: req.body.email });
