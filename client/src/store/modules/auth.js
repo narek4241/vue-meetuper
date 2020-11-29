@@ -5,6 +5,7 @@ export default {
 
   state: {
     user: null,
+    isAuthResolved: false,
   },
 
   getters: {
@@ -29,18 +30,36 @@ export default {
       return axios.post('/api/v1/users/register', formData);
     },
 
+    logout(context) {
+      return axios
+        .post('/api/v1/users/logout')
+        .then(() => {
+          context.commit('setAuthUser', null);
+        })
+        .catch((err) => {
+          return err;
+        });
+    },
+
     getAuthUser(context) {
+      const user = context.getters.user;
+      if (user) {
+        // #task #th #res syntax usage
+        return Promise.resolve(user);
+      }
+
       return axios
         .get('/api/v1/users/me')
         .then((res) => {
           const user = res.data;
           context.commit('setAuthUser', user);
+          context.commit('setAuthState', true);
           return user;
         })
         .catch((err) => {
           context.commit('setAuthUser', null);
-          console.error(err); // opt
-          return undefined;
+          context.commit('setAuthState', true);
+          return err;
         });
     },
   },
@@ -48,6 +67,9 @@ export default {
   mutations: {
     setAuthUser(state, user) {
       state.user = user;
+    },
+    setAuthState(state, authState) {
+      state.isAuthResolved = authState;
     },
   },
 };

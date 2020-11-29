@@ -63,7 +63,7 @@
               Profile
             </a>
             <hr class="navbar-divider" />
-            <a class="navbar-item">
+            <a @click.prevent="logout" class="navbar-item">
               Logout
             </a>
           </div>
@@ -94,6 +94,12 @@ export default {
     ...mapGetters({
       user: 'auth/user',
     }),
+  },
+
+  methods: {
+    logout() {
+      this.$store.dispatch('auth/logout').catch((err) => console.error(err));
+    },
   },
 };
 </script>
