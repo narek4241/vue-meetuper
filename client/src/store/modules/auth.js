@@ -1,4 +1,15 @@
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import axiosInstance from '@/services/axios';
+
+const checkTokenValidity = (token) => {
+  if (token) {
+    const decodedToken = jwt_decode(token);
+    return decodedToken && decodedToken.exp * 1000 > new Date().getTime;
+  }
+
+  return false;
+};
 
 export default {
   namespaced: true,
@@ -23,6 +34,7 @@ export default {
     loginWithEmailAndPassword(context, formData) {
       return axios.post('/api/v1/users/login', formData).then((res) => {
         const user = res.data;
+        localStorage.setItem('meetuper-jwt', user.token);
         context.commit('setAuthUser', user);
       });
     },
@@ -31,20 +43,30 @@ export default {
     },
 
     logout(context) {
-      return axios
-        .post('/api/v1/users/logout')
-        .then(() => {
-          context.commit('setAuthUser', null);
-        })
-        .catch((err) => {
-          return err;
-        });
+      // #note Only for "Session" Authentication
+      // return axios
+      //   .post('/api/v1/users/logout')
+      //   .then(() => {
+      //     context.commit('setAuthUser', null);
+      //   })
+      //   .catch((err) => {
+      //     return err;
+      //   });
+
+      return new Promise((resolve) => {
+        localStorage.removeItem('meetuper-jwt');
+        context.commit('setAuthUser', null);
+        resolve();
+      });
     },
 
     getAuthUser(context) {
       const user = context.getters.user;
-      if (user) {
-        // #task #th #res syntax usage
+      const token = localStorage.getItem('meetuper-jwt');
+      const isTokenValid = checkTokenValidity(token);
+
+      if (user && isTokenValid) {
+        // #task #th #res2 syntax case usage
         return Promise.resolve(user);
       }
 
@@ -54,7 +76,7 @@ export default {
         },
       };
 
-      return axios
+      return axiosInstance
         .get('/api/v1/users/me', config)
         .then((res) => {
           const user = res.data;
