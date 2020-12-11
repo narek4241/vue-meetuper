@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 const Meetup = require('./meetups');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const config = require('../config');
 
 const userSchema = new Schema({
   avatar: String,
@@ -55,7 +56,7 @@ userSchema.pre('save', function (next) {
   });
 });
 
-//Every user have acces to this methods
+//Every user has access to this methods
 userSchema.methods.comparePassword = function (candidatePassword, callback) {
   bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
     if (err) {
@@ -64,6 +65,32 @@ userSchema.methods.comparePassword = function (candidatePassword, callback) {
 
     callback(null, isMatch);
   });
+};
+
+// #note #warning #context DO NOT USE "arrow function" below opt
+userSchema.methods.generateJWT = function () {
+  return jwt.sign(
+    {
+      email: this.email,
+      id: this._id,
+    },
+    config.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+};
+
+// #note #warning #context DO NOT USE "arrow function" below opt
+userSchema.methods.toAuthJSON = function () {
+  return {
+    _id: this._id,
+    avatar: this.avatar,
+    email: this.email,
+    name: this.name,
+    username: this.username,
+    info: this.info,
+    joinedMeetups: this.joinedMeetups,
+    token: this.generateJWT(),
+  };
 };
 
 module.exports = mongoose.model('User', userSchema);

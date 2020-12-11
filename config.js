@@ -5,4 +5,5 @@ module.exports = {
     `mongodb+srv://meetuperUser:4vAoXnbKV3KcsvFm@meetupercluster.u9dws.mongodb.net/vue-meetuper?retryWrites=true&w=majority`,
   NODE_ENV: process.env.NODE_ENV || `development`,
   SESSION_SECRET: 'cbykQK7BB+gB+&vG',
+  JWT_SECRET: 'WCK%aK7ZN#gB:&&H',
 };

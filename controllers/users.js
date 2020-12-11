@@ -19,7 +19,9 @@ exports.getCurrentUser = function (req, res, next) {
     return res.sendStatus(422);
   }
 
-  return res.json(user);
+  // #note Only for "Session" Authentication
+  // return res.json(user);
+  return res.json(user.toAuthJSON());
 };
 
 exports.register = async (req, res) => {
@@ -57,12 +59,15 @@ exports.login = async (req, res, next) => {
     }
 
     if (passportUser) {
-      req.login(passportUser, (err) => {
-        if (err) {
-          next(err);
-        }
-        return res.json(passportUser);
-      });
+      // #note Only for "Session" Authentication
+      // req.login(passportUser, (err) => {
+      //   if (err) {
+      //     next(err);
+      //   }
+      //   return res.json(passportUser);
+      // });
+
+      return res.json(passportUser.toAuthJSON());
     } else {
       return res.status(422).send({
         errors: {
