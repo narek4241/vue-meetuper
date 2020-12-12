@@ -1,6 +1,7 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import axiosInstance from '@/services/axios';
+import { rejectError } from '@/helpers';
 
 const checkTokenValidity = (token) => {
   if (token) {
@@ -32,14 +33,19 @@ export default {
 
   actions: {
     loginWithEmailAndPassword(context, formData) {
-      return axios.post('/api/v1/users/login', formData).then((res) => {
-        const user = res.data;
-        localStorage.setItem('meetuper-jwt', user.token);
-        context.commit('setAuthUser', user);
-      });
+      return axios
+        .post('/api/v1/users/login', formData)
+        .then((res) => {
+          const user = res.data;
+          localStorage.setItem('meetuper-jwt', user.token);
+          context.commit('setAuthUser', user);
+        })
+        .catch((err) => rejectError(err));
     },
     registerUser(context, formData) {
-      return axios.post('/api/v1/users/register', formData);
+      return axios
+        .post('/api/v1/users/register', formData)
+        .catch((err) => rejectError(err));
     },
 
     logout(context) {

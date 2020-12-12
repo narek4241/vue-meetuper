@@ -112,7 +112,7 @@
                     <span
                       v-if="!$v.form.password.minLength"
                       class="help is-danger"
-                      >Password must be min 8
+                      >Password must be min 6
                     </span>
                   </div>
                 </div>
@@ -192,6 +192,7 @@ export default {
     },
   },
 
+  // #note validation done in both [client, server] (complete each other) opt
   validations: {
     form: {
       username: {
@@ -212,7 +213,7 @@ export default {
       },
       password: {
         required,
-        minLength: minLength(8),
+        minLength: minLength(6),
       },
       repeatPassword: {
         required,
@@ -226,7 +227,12 @@ export default {
       this.$store
         .dispatch('auth/registerUser', this.form)
         .then(() => this.$router.push('/login'))
-        .catch((err) => console.error(err));
+        .catch((errorMessage) => {
+          this.$toasted.error(`${errorMessage}`, {
+            position: 'top-center',
+            duration: 5000,
+          });
+        });
     },
   },
 };

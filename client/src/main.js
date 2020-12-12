@@ -7,6 +7,7 @@ import App from './App.vue';
 import AppDropdown from './components/shared/AppDropdown';
 import AppHero from './components/shared/AppHero';
 import AppSpinner from './components/shared/AppSpinner';
+import toasted from 'vue-toasted';
 
 // #task #res usage opt
 import moment from 'moment';
@@ -18,8 +19,9 @@ Vue.component('AppSpinner', AppSpinner);
 Vue.component('AppHero', AppHero);
 Vue.component('AppDropdown', AppDropdown);
 
-// #task #findOut usage
+// #task #findOut usage2
 Vue.use(vuelidate);
+Vue.use(toasted);
 
 // #task #findOut2.5 usage
 Vue.filter('capitalize', function(value) {

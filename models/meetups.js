@@ -17,7 +17,7 @@ const meetupSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   meetupCreator: { type: Schema.Types.ObjectId, ref: 'User' },
-  joinedPeople: [{type: Schema.Types.ObjectId, ref: 'User'}]
+  joinedPeople: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
-module.exports = mongoose.model('Meetup', meetupSchema );
+module.exports = mongoose.model('Meetup', meetupSchema);

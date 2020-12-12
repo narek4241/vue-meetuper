@@ -17,18 +17,20 @@ const userSchema = new Schema({
   name: {
     type: String,
     required: true,
-    min: [6, 'Too short, min is 6 characters'],
+    minlength: [2, 'Too short, min is 2 characters'],
+    maxlength: [16, 'Too long, max is 16 characters'],
   },
   username: {
     type: String,
     required: true,
-    min: [6, 'Too short, min is 6 characters'],
+    minlength: [6, 'Too short, min is 6 characters'],
+    maxlength: [16, 'Too long, max is 16 characters'],
   },
   password: {
     type: String,
     // #task #afterwards replace min & max with minlength & maxlength opt0
-    minlength: [4, 'Too short, min is 4 characters'],
-    max: [32, 'Too long, max is 32 characters'],
+    minlength: [6, 'Too short, min is 6 characters'],
+    maxlength: [32, 'Too long, max is 32 characters'],
     required: 'Password is required',
   },
   info: String,

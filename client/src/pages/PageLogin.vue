@@ -51,7 +51,7 @@
                     <span
                       v-if="!$v.form.password.minLength"
                       class="help is-danger"
-                      >Password must be min 8 characters
+                      >Password must be min 6 characters
                     </span>
                   </div>
                 </div>
@@ -83,9 +83,8 @@ export default {
   data() {
     return {
       form: {
-        // #task #findOut whether use '' or null*
-        email: '',
-        password: '',
+        email: null,
+        password: null,
       },
     };
   },
@@ -96,6 +95,7 @@ export default {
     },
   },
 
+  // #note validation done in both [client, server] (complete each other) opt
   validations: {
     form: {
       email: {
@@ -104,7 +104,7 @@ export default {
       },
       password: {
         required,
-        minLength: minLength(8),
+        minLength: minLength(6),
       },
     },
   },
@@ -114,7 +114,12 @@ export default {
       this.$store
         .dispatch('auth/loginWithEmailAndPassword', this.form)
         .then(() => this.$router.push('/'))
-        .catch((err) => console.error(err));
+        .catch((errorMessage) => {
+          this.$toasted.error(`${errorMessage}`, {
+            position: 'top-center',
+            duration: 5000,
+          });
+        });
     },
   },
 };

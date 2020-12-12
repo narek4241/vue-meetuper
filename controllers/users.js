@@ -25,13 +25,30 @@ exports.getCurrentUser = function (req, res, next) {
 };
 
 exports.register = async (req, res) => {
+  const registerData = req.body;
+  if (!registerData.email) {
+    return res.status(422).json({
+      errors: {
+        massage: 'Email is required',
+      },
+    });
+  }
+
+  if (!registerData.password) {
+    return res.status(422).json({
+      errors: {
+        massage: 'Password is required',
+      },
+    });
+  }
+
   try {
-    const currentUser = await User.findOne({ email: req.body.email });
+    const currentUser = await User.findOne({ email: registerData.email });
     if (currentUser) {
       res.status(400).send('This email already exists');
     }
 
-    const user = new User(req.body);
+    const user = new User(registerData);
     const data = await user.save();
 
     // #note password hashing could be also here rm
@@ -71,7 +88,7 @@ exports.login = async (req, res, next) => {
     } else {
       return res.status(422).send({
         errors: {
-          authentication: 'Oops smth went wrong',
+          message: 'Invalid Email or Password',
         },
       });
     }
