@@ -1,5 +1,5 @@
 export const rejectError = (error) => {
-  let message = 'Oops smth went wrong (logged inside helpers)';
+  let message = 'Oops smth went wrong';
   const { response } = error;
 
   // #note using (A&&B&&C), otherwise chance to get "cannot read prop. message of undefined" opt

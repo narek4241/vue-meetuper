@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
   if (!registerData.email) {
     return res.status(422).json({
       errors: {
-        massage: 'Email is required',
+        message: 'Email is required',
       },
     });
   }
@@ -37,7 +37,7 @@ exports.register = async (req, res) => {
   if (!registerData.password) {
     return res.status(422).json({
       errors: {
-        massage: 'Password is required',
+        message: 'Password is required',
       },
     });
   }
@@ -64,10 +64,19 @@ exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email) {
-    res.status(422).send('email is required');
+    return res.status(422).json({
+      errors: {
+        message: 'Email is required',
+      },
+    });
   }
+
   if (!password) {
-    res.status(422).send('password is required');
+    return res.status(422).json({
+      errors: {
+        message: 'Password is required',
+      },
+    });
   }
 
   return passport.authenticate('local', (err, passportUser) => {
