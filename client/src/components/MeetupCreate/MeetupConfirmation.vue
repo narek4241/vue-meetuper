@@ -7,55 +7,55 @@
         <span class="result-title">
           Location
         </span>
-        <p>Some Location</p>
+        <p>{{ this.formData.location }}</p>
       </div>
       <div>
         <span class="result-title">
           Title
         </span>
-        <p>Some Title</p>
+        <p>{{ this.formData.title }}</p>
       </div>
       <div>
         <span class="result-title">
           Start Date
         </span>
-        <p>Some Start Date</p>
+        <p>{{ this.formData.startDate }}</p>
       </div>
       <div>
         <span class="result-title">
           From
         </span>
-        <p>Some Time From</p>
+        <p>{{ this.formData.timeFrom }}</p>
       </div>
       <div>
         <span class="result-title">
           To
         </span>
-        <p>Some Time To</p>
+        <p>{{ this.formData.timeTo }}</p>
       </div>
       <div>
         <span class="result-title">
           Category
         </span>
-        <p>Some Category</p>
+        <p>{{ this.formData.category.name }}</p>
       </div>
       <div>
         <span class="result-title">
           Image
         </span>
-        <p>Some Event</p>
+        <p>{{ this.formData.image }}</p>
       </div>
       <div>
         <span class="result-title">
           Short Info
         </span>
-        <p>Some Info</p>
+        <p>{{ this.formData.shortInfo }}</p>
       </div>
       <div>
         <span class="result-title">
           Description
         </span>
-        <p>Some Description</p>
+        <p>{{ this.formData.description }}</p>
       </div>
     </div>
   </div>
@@ -63,6 +63,13 @@
 
 <script>
 export default {
+  props: {
+    formData: {
+      type: Object,
+      required: true,
+    },
+  },
+
   validations: {},
 };
 </script>

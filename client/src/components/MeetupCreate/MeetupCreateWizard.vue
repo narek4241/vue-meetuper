@@ -1,23 +1,40 @@
 <template>
   <div class="meetup-create-form">
     <div class="current-step is-pulled-right">
-      1 of 4
+      {{ currentStep }} of {{ allStepsCount }}
     </div>
-    <!-- Form Steps -->
-    <MeetupLocation />
-    <MeetupDetail />
-    <MeetupDescription />
-    <MeetupConfirmation />
 
-    <progress class="progress" :value="100" max="100">100%</progress>
+    <keep-alive>
+      <MeetupLocation v-if="currentStep === 1" @formUpdated="mergeFormData" />
+      <MeetupDetail v-if="currentStep === 2" @formUpdated="mergeFormData" />
+      <MeetupDescription
+        v-if="currentStep === 3"
+        @formUpdated="mergeFormData"
+      />
+      <MeetupConfirmation v-if="currentStep === 4" :formData="form" />
+    </keep-alive>
+
+    <progress class="progress" :value="currentProgress" max="100"
+      >{{ currentProgress }}%</progress
+    >
+
     <div class="controll-btns m-b-md">
-      <button class="button is-primary m-r-sm">Back</button>
-      <button class="button is-primary">Next</button>
-      <!-- Confirm Data -->
-      <!-- <button v-else
-              class="button is-primary">Confirm</button> -->
+      <button
+        @click="prevStep"
+        v-if="this.currentStep !== 1"
+        class="button is-primary m-r-sm"
+      >
+        Back
+      </button>
+      <button
+        @click="nextStep"
+        v-if="this.currentStep !== this.allStepsCount"
+        class="button is-primary"
+      >
+        Next
+      </button>
+      <button v-else class="button is-primary">Confirm</button>
     </div>
-    <!-- Just To See Data in the Form -->
     <pre><code>{{form}}</code></pre>
   </div>
 </template>
@@ -34,8 +51,12 @@ export default {
     MeetupDescription,
     MeetupConfirmation,
   },
+
   data() {
     return {
+      currentStep: 1,
+      allStepsCount: 4,
+
       form: {
         location: null,
         title: null,
@@ -48,6 +69,29 @@ export default {
         timeFrom: null,
       },
     };
+  },
+
+  computed: {
+    currentProgress() {
+      return (100 / this.allStepsCount) * this.currentStep;
+    },
+  },
+
+  methods: {
+    mergeFormData(updatedFormData) {
+      this.form = { ...this.form, ...updatedFormData };
+    },
+
+    mergeFormData2(updatedFormData) {
+      console.log('detail to wizard logged', updatedFormData, this.form);
+    },
+
+    prevStep() {
+      this.currentStep--;
+    },
+    nextStep() {
+      this.currentStep++;
+    },
   },
 };
 </script>

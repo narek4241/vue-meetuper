@@ -1,8 +1,9 @@
 <template>
-  <form>
+  <form @input="emitFormData">
     <div class="field">
       <label class="title m-b-sm">Choose Title</label>
       <input
+        @blur="$v.form.title.$touch()"
         v-model="form.title"
         class="input"
         type="text"
@@ -17,7 +18,8 @@
     <div class="field">
       <label class="title m-b-sm">Starts At</label>
       <input
-        v-model="form.startsAt"
+        @blur="$v.form.startDate.$touch()"
+        v-model="form.startDate"
         class="input"
         type="text"
         placeholder="Starts At"
@@ -31,31 +33,49 @@
     <div class="field">
       <label class="title m-b-sm">From</label>
       <input
+        @blur="$v.form.timeFrom.$touch()"
         v-model="form.timeFrom"
         class="input"
         type="text"
         placeholder="Time From"
       />
+      <div v-if="$v.form.timeFrom.$error">
+        <span v-if="!$v.form.timeFrom.required" class="help is-danger"
+          >Time From is required</span
+        >
+      </div>
     </div>
     <div class="field">
       <label class="title m-b-sm">To</label>
       <input
+        @blur="$v.form.timeTo.$touch()"
         v-model="form.timeTo"
         class="input"
         type="text"
         placeholder="Time to"
       />
+      <div v-if="$v.form.timeTo.$error">
+        <span v-if="!$v.form.timeTo.required" class="help is-danger"
+          >Time To is required</span
+        >
+      </div>
     </div>
     <div class="field">
       <label class="title m-b-sm">Please Choose the Category.</label>
       <div class="m-b-lg">
         <div class="select">
-          <!-- TODO: Get Here Categories -->
-          <!-- <select v-model="form.category">
-            <option v-for="category of categories"
-                    :value="category"
-                    :key="category.id">{{category.name}}</option>
-          </select> -->
+          <select
+            @change="emitFormData"
+            @blur="$v.form.category.$touch()"
+            v-model="form.category"
+          >
+            <option
+              v-for="category of categories"
+              :value="category"
+              :key="category.id"
+              >{{ category.name }}</option
+            >
+          </select>
         </div>
         <div v-if="$v.form.category.$error">
           <span v-if="!$v.form.category.required" class="help is-danger"
@@ -70,6 +90,18 @@
 <script>
 import { required } from 'vuelidate/lib/validators';
 export default {
+  created() {
+    if (this.categories.length === 0) {
+      this.$store.dispatch('categories/fetchCategories');
+    }
+  },
+
+  computed: {
+    categories() {
+      return this.$store.state.categories.items;
+    },
+  },
+
   data() {
     return {
       form: {
@@ -81,6 +113,7 @@ export default {
       },
     };
   },
+
   validations: {
     form: {
       title: { required },
@@ -88,6 +121,12 @@ export default {
       category: { required },
       timeTo: { required },
       timeFrom: { required },
+    },
+  },
+
+  methods: {
+    emitFormData() {
+      this.$emit('formUpdated', this.form);
     },
   },
 };

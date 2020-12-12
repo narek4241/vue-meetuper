@@ -1,8 +1,9 @@
 <template>
-  <form class="m-b-md">
+  <form @input="emitFormData" class="m-b-md">
     <div class="field">
       <label class="title">Image</label>
       <input
+        @blur="$v.form.image.$touch()"
         v-model="form.image"
         class="input"
         type="text"
@@ -17,6 +18,7 @@
     <div class="field">
       <label class="title">Additional Info</label>
       <textarea
+        @blur="$v.form.shortInfo.$touch()"
         v-model="form.shortInfo"
         class="textarea"
         placeholder="Write Short Info"
@@ -31,6 +33,7 @@
     <div class="field">
       <label class="title">Long Description</label>
       <textarea
+        @blur="$v.form.description.$touch()"
         v-model="form.description"
         class="textarea"
         placeholder="Write description"
@@ -57,6 +60,7 @@ export default {
       },
     };
   },
+
   validations: {
     form: {
       image: {
@@ -68,6 +72,12 @@ export default {
       description: {
         required,
       },
+    },
+  },
+
+  methods: {
+    emitFormData() {
+      this.$emit('formUpdated', this.form);
     },
   },
 };
