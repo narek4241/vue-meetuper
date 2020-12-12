@@ -2,14 +2,15 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from '../store';
 
-import PageHome from '../pages/PageHome';
-import PageMeetupDetail from '../pages/PageMeetupDetail';
-import PageMeetupFind from '../pages/PageMeetupFind';
-import PageNotFound from '../pages/PageNotFound';
-import PageRegister from '../pages/PageRegister';
-import PageLogin from '../pages/PageLogin';
-import PageProfile from '../pages/PageProfile';
-import PageNotAuthenticated from '../pages/PageNotAuthenticated';
+import PageHome from '@/pages/PageHome';
+import PageMeetupDetail from '@/pages/PageMeetupDetail';
+import PageMeetupFind from '@/pages/PageMeetupFind';
+import PageMeetupCreate from '@/pages/PageMeetupCreate';
+import PageRegister from '@/pages/PageRegister';
+import PageLogin from '@/pages/PageLogin';
+import PageProfile from '@/pages/PageProfile';
+import PageNotFound from '@/pages/PageNotFound';
+import PageNotAuthenticated from '@/pages/PageNotAuthenticated';
 
 Vue.use(Router);
 
@@ -27,10 +28,17 @@ const router = new Router({
       meta: { onlyAuthUser: true },
     },
     {
+      path: '/meetups/new',
+      name: 'PageMeetupCreate',
+      component: PageMeetupCreate,
+      meta: { onlyAuthUser: true },
+    },
+    {
       path: '/meetups/:id',
       name: 'PageMeetupDetail',
       component: PageMeetupDetail,
     },
+
     {
       path: '/find',
       name: 'PageMeetupFind',
