@@ -3,7 +3,7 @@
     <AppHero />
     <section class="section">
       <div class="container">
-        <MeetupCreateWizard />
+        <MeetupCreateWizard @meetupConfirmed="createMeetup" />
       </div>
     </section>
   </div>
@@ -14,6 +14,12 @@ import MeetupCreateWizard from '@/components/MeetupCreate/MeetupCreateWizard';
 export default {
   components: {
     MeetupCreateWizard,
+  },
+
+  methods: {
+    createMeetup(formData) {
+      this.$store.dispatch('meetups/createMeetup', formData);
+    },
   },
 };
 </script>

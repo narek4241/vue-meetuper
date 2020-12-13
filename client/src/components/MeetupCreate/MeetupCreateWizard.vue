@@ -53,9 +53,10 @@
       >
         Next
       </button>
-      <button v-else class="button is-primary">Confirm</button>
+      <button v-else @click="emitFormData" class="button is-primary">
+        Confirm
+      </button>
     </div>
-    <pre><code>{{form}}</code></pre>
   </div>
 </template>
 
@@ -131,6 +132,10 @@ export default {
       this.$nextTick(() => {
         this.canProceed = !this.$refs['currentComponent'].$v.$invalid;
       });
+    },
+
+    emitFormData() {
+      this.$emit('meetupConfirmed', this.form);
     },
   },
 };

@@ -19,7 +19,7 @@
         <span class="result-title">
           Start Date
         </span>
-        <p>{{ this.formData.startDate }}</p>
+        <p>{{ this.formData.startDate | formatDate }}</p>
       </div>
       <div>
         <span class="result-title">
@@ -37,7 +37,12 @@
         <span class="result-title">
           Category
         </span>
-        <p>{{ this.formData.category.name }}</p>
+        <p>
+          {{
+            this.formData.category.name.charAt(0).toUpperCase() +
+              this.formData.category.name.slice(1)
+          }}
+        </p>
       </div>
       <div>
         <span class="result-title">

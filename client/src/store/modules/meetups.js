@@ -38,5 +38,9 @@ export default {
         return state.item;
       });
     },
+
+    createMeetup(context, meetupData) {
+      console.log('meetupData', meetupData);
+    },
   },
 };

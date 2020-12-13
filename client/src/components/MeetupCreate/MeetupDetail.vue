@@ -17,13 +17,14 @@
     </div>
     <div class="field">
       <label class="title m-b-sm">Starts At</label>
-      <input
-        @blur="$v.form.startDate.$touch()"
-        v-model="form.startDate"
-        class="input"
-        type="text"
-        placeholder="Starts At"
-      />
+      <datepicker
+        @input="setDate"
+        :value="form.startDate"
+        :disabled-dates="disabledDates"
+        :placeholder="new Date() | formatDate"
+        input-class="input"
+      ></datepicker>
+
       <div v-if="$v.form.startDate.$error">
         <span v-if="!$v.form.startDate.required" class="help is-danger"
           >Starts at is required</span
@@ -32,13 +33,14 @@
     </div>
     <div class="field">
       <label class="title m-b-sm">From</label>
-      <input
-        @blur="$v.form.timeFrom.$touch()"
-        v-model="form.timeFrom"
-        class="input"
-        type="text"
-        placeholder="Time From"
-      />
+
+      <!-- #note #good '$event' var use in events opt -->
+      <vue-timepicker
+        @change="changeTime($event, 'timeFrom')"
+        :minute-interval="10"
+        hide-clear-button
+      ></vue-timepicker>
+
       <div v-if="$v.form.timeFrom.$error">
         <span v-if="!$v.form.timeFrom.required" class="help is-danger"
           >Time From is required</span
@@ -47,13 +49,13 @@
     </div>
     <div class="field">
       <label class="title m-b-sm">To</label>
-      <input
-        @blur="$v.form.timeTo.$touch()"
-        v-model="form.timeTo"
-        class="input"
-        type="text"
-        placeholder="Time to"
-      />
+
+      <vue-timepicker
+        @change="changeTime($event, 'timeTo')"
+        :minute-interval="10"
+        hide-clear-button
+      ></vue-timepicker>
+
       <div v-if="$v.form.timeTo.$error">
         <span v-if="!$v.form.timeTo.required" class="help is-danger"
           >Time To is required</span
@@ -89,7 +91,13 @@
 
 <script>
 import { required } from 'vuelidate/lib/validators';
+import Datepicker from 'vuejs-datepicker';
+import moment from 'moment';
+import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue';
+
 export default {
+  components: { Datepicker, VueTimepicker },
+
   created() {
     if (this.categories.length === 0) {
       this.$store.dispatch('categories/fetchCategories');
@@ -111,6 +119,17 @@ export default {
         timeFrom: null,
         category: null,
       },
+
+      disabledDates: {
+        customPredictor: (date) => {
+          const today = new Date();
+          const yesterday = today.setDate(today.getDate() - 1);
+
+          if (date < yesterday) {
+            return true;
+          }
+        },
+      },
     };
   },
 
@@ -130,6 +149,18 @@ export default {
         data: this.form,
         isValid: !this.$v.$invalid,
       });
+    },
+
+    setDate(date) {
+      this.form.startDate = moment(date).format();
+      this.emitFormData();
+    },
+
+    changeTime({ data }, field) {
+      const hours = data.HH || '00';
+      const minutes = data.mm || '00';
+      this.form[field] = `${hours}:${minutes}`;
+      this.emitFormData();
     },
   },
 };
