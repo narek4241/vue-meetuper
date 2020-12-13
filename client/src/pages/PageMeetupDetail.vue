@@ -47,7 +47,9 @@
                 </div>
                 <div class="meetup-side-box-place m-b-sm">
                   <p><b>How to find us</b></p>
-                  <p>{{ meetup.location }}</p>
+                  <p style="text-transform: capitalize">
+                    {{ meetup.location }}
+                  </p>
                 </div>
                 <div class="meetup-side-box-more-info">
                   <p><b>Additional Info</b></p>

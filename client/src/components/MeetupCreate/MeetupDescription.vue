@@ -11,7 +11,7 @@
       />
       <div v-if="$v.form.image.$error">
         <span v-if="!$v.form.image.required" class="help is-danger"
-          >Username is required</span
+          >Image is required</span
         >
       </div>
     </div>

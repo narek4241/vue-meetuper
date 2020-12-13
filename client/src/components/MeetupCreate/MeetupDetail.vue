@@ -24,12 +24,6 @@
         :placeholder="new Date() | formatDate"
         input-class="input"
       ></datepicker>
-
-      <div v-if="$v.form.startDate.$error">
-        <span v-if="!$v.form.startDate.required" class="help is-danger"
-          >Starts at is required</span
-        >
-      </div>
     </div>
     <div class="field">
       <label class="title m-b-sm">From</label>
@@ -40,12 +34,6 @@
         :minute-interval="10"
         hide-clear-button
       ></vue-timepicker>
-
-      <div v-if="$v.form.timeFrom.$error">
-        <span v-if="!$v.form.timeFrom.required" class="help is-danger"
-          >Time From is required</span
-        >
-      </div>
     </div>
     <div class="field">
       <label class="title m-b-sm">To</label>
@@ -55,12 +43,6 @@
         :minute-interval="10"
         hide-clear-button
       ></vue-timepicker>
-
-      <div v-if="$v.form.timeTo.$error">
-        <span v-if="!$v.form.timeTo.required" class="help is-danger"
-          >Time To is required</span
-        >
-      </div>
     </div>
     <div class="field">
       <label class="title m-b-sm">Please Choose the Category.</label>

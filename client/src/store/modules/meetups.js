@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axiosInstance from '@/services/axios';
 
 export default {
   // #task #res explain usage
@@ -39,8 +40,16 @@ export default {
       });
     },
 
-    createMeetup(context, meetupData) {
-      console.log('meetupData', meetupData);
+    createMeetup({ rootState }, meetupData) {
+      meetupData.meetupCreator = rootState.auth.user;
+      meetupData.processedLocation = meetupData.location
+        .toLowerCase()
+        .replace(/[\s,]+/g, '')
+        .trim();
+
+      return axiosInstance
+        .post('/api/v1/meetups', meetupData)
+        .then((res) => res.data);
     },
   },
 };

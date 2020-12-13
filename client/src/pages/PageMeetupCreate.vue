@@ -18,7 +18,16 @@ export default {
 
   methods: {
     createMeetup(formData) {
-      this.$store.dispatch('meetups/createMeetup', formData);
+      this.$store
+        .dispatch('meetups/createMeetup', formData)
+        .then((createdMeetup) => {
+          if (createdMeetup) {
+            this.$router.push(`/meetups/${createdMeetup._id}`);
+          } else {
+            // #note opt
+            return;
+          }
+        });
     },
   },
 };

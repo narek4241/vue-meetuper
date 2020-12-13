@@ -36,3 +36,18 @@ exports.getMeetupById = function (req, res) {
 exports.getSecret = (req, res) => {
   return res.json({ secret: 'I am Secret message' });
 };
+
+exports.createMeetup = (req, res) => {
+  const meetupData = req.body;
+
+  const meetup = new Meetup(meetupData);
+  meetup.status = 'active';
+
+  meetup.save((err, createdMeetup) => {
+    if (err) {
+      return res.status(422).send({ err });
+    }
+
+    res.json(createdMeetup);
+  });
+};
