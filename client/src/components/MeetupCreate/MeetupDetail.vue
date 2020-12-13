@@ -126,7 +126,10 @@ export default {
 
   methods: {
     emitFormData() {
-      this.$emit('formUpdated', this.form);
+      this.$emit('formUpdated', {
+        data: this.form,
+        isValid: !this.$v.$invalid,
+      });
     },
   },
 };

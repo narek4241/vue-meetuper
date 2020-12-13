@@ -5,13 +5,32 @@
     </div>
 
     <keep-alive>
-      <MeetupLocation v-if="currentStep === 1" @formUpdated="mergeFormData" />
-      <MeetupDetail v-if="currentStep === 2" @formUpdated="mergeFormData" />
+      <!-- #note shortHand coded below (as dynamically rendered comp) opt -->
+      <!-- <MeetupLocation
+        v-if="currentStep === 1"
+        @formUpdated="mergeFormData"
+        ref="currentComponent"
+      />
+      <MeetupDetail
+        v-if="currentStep === 2"
+        @formUpdated="mergeFormData"
+        ref="currentComponent"
+      />
       <MeetupDescription
         v-if="currentStep === 3"
         @formUpdated="mergeFormData"
+        ref="currentComponent"
       />
-      <MeetupConfirmation v-if="currentStep === 4" :formData="form" />
+      <MeetupConfirmation v-if="currentStep === 4" :formData="form" /> -->
+
+      <!-- #note dynamically rendered comp opt -->
+      <component
+        :is="currentComponent"
+        @formUpdated="mergeFormData"
+        ref="currentComponent"
+        :formData="form"
+      >
+      </component>
     </keep-alive>
 
     <progress class="progress" :value="currentProgress" max="100"
@@ -29,6 +48,7 @@
       <button
         @click="nextStep"
         v-if="this.currentStep !== this.allStepsCount"
+        :disabled="!canProceed"
         class="button is-primary"
       >
         Next
@@ -44,6 +64,7 @@ import MeetupLocation from './MeetupLocation';
 import MeetupDetail from './MeetupDetail';
 import MeetupDescription from './MeetupDescription';
 import MeetupConfirmation from './MeetupConfirmation';
+
 export default {
   components: {
     MeetupLocation,
@@ -54,8 +75,16 @@ export default {
 
   data() {
     return {
+      formSteps: [
+        'MeetupLocation',
+        'MeetupDetail',
+        'MeetupDescription',
+        'MeetupConfirmation',
+      ],
+
       currentStep: 1,
-      allStepsCount: 4,
+
+      canProceed: false,
 
       form: {
         location: null,
@@ -72,25 +101,36 @@ export default {
   },
 
   computed: {
+    currentComponent() {
+      return this.formSteps[this.currentStep - 1];
+    },
+
+    allStepsCount() {
+      return this.formSteps.length;
+    },
+
     currentProgress() {
       return (100 / this.allStepsCount) * this.currentStep;
     },
   },
 
   methods: {
-    mergeFormData(updatedFormData) {
-      this.form = { ...this.form, ...updatedFormData };
-    },
-
-    mergeFormData2(updatedFormData) {
-      console.log('detail to wizard logged', updatedFormData, this.form);
+    mergeFormData(updatedForm) {
+      this.form = { ...this.form, ...updatedForm.data };
+      this.canProceed = updatedForm.isValid;
     },
 
     prevStep() {
       this.currentStep--;
+      this.canProceed = true;
     },
     nextStep() {
       this.currentStep++;
+      // #note nextTick Defer the callback to be executed after the next DOM update cycle. opt
+      // #note2 above's func-ity <=> (also could done by using $emit)(#isTried: true) opt
+      this.$nextTick(() => {
+        this.canProceed = !this.$refs['currentComponent'].$v.$invalid;
+      });
     },
   },
 };
