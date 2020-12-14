@@ -116,6 +116,15 @@ export default {
       const meetups = [...state.user.joinedMeetups, meetup];
       commit('setMeetupsToAuthUser', meetups);
     },
+
+    removeMeetupFromAuthUser({ state, commit }, meetup) {
+      const meetups = state.user.joinedMeetups;
+      const index = meetups.findIndex(
+        (customMeetup) => customMeetup._id === meetup
+      );
+      meetups.splice(index, 1);
+      commit('setMeetupsToAuthUser', meetups);
+    },
   },
 
   mutations: {

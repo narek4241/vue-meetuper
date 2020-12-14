@@ -53,25 +53,6 @@ exports.createMeetup = (req, res) => {
   });
 };
 
-// #note #v1 join meetup first implementation (working) fully opt
-// exports.joinMeetup = async (req, res) => {
-//   const { user } = req;
-//   const { id } = req.params;
-
-//   const meetup = await Meetup.findById(id);
-
-//   meetup.joinedPeople = [...meetup.joinedPeople, user];
-//   meetup.joinedPeopleCount++;
-
-//   meetup.save((err, meetup) => {
-//     if (err) {
-//       res.status().json({ errors: err });
-//     }
-
-//     res.send(meetup);
-//   });
-// };
-
 exports.joinMeetup = (req, res) => {
   const { user } = req;
   const { id } = req.params;
@@ -83,13 +64,22 @@ exports.joinMeetup = (req, res) => {
       res.status(422).send({ errors });
     }
 
-    meetup.joinedPeople.push(user);
-    meetup.joinedPeopleCount++;
+    if (meetup) {
+      meetup.joinedPeople.push(user);
+      meetup.joinedPeopleCount++;
+    } else {
+      res.status(422).send({
+        errors: {
+          status: 'Meetup is not found',
+        },
+      });
+    }
 
     Promise.all([
       meetup.save(),
       User.updateOne({ _id: user._id }, { $push: { joinedMeetups: id } }),
     ])
+      // #task #findOut2 res from parent function and not from .then()
       .then((result) => res.send({ id }))
       .catch((errors) => res.status(422).send({ errors }));
   });
@@ -111,6 +101,7 @@ exports.leaveMeetup = (req, res) => {
     User.updateOne({ _id: user._id }, { $pull: { joinedMeetups: id } }),
   ])
     .then((result) => {
+      // #task #2 #dpl #findOut2 res from parent function and not from .then()
       res.send({ id });
     })
     .catch((errors) => res.status(422).json({ errors }));

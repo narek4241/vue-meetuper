@@ -25,7 +25,9 @@
           </article>
         </div>
         <div class="is-pulled-right">
-          <button v-if="isMember" class="button is-danger">Leave Group</button>
+          <button v-if="isMember" @click="leaveMeetup" class="button is-danger">
+            Leave Meetup
+          </button>
         </div>
       </div>
     </section>
@@ -195,7 +197,7 @@ export default {
       return this.$store.getters['auth/isMember'](this.meetup._id);
     },
     canJoin() {
-      return this.isAuthenticated && !this.isMeetupOwner && !this.isMemeber;
+      return this.isAuthenticated && !this.isMeetupOwner && !this.isMember;
     },
   },
 
@@ -204,7 +206,20 @@ export default {
     ...mapActions('threads', ['fetchThreads']),
 
     joinMeetup() {
-      this.$store.dispatch('meetups/joinMeetup', this.meetup._id);
+      this.$store.dispatch('meetups/joinMeetup', this.meetup._id).then(() =>
+        this.$toasted.success('Joined Meetup Successfully', {
+          position: 'top-center',
+          duration: 3000,
+        })
+      );
+    },
+    leaveMeetup() {
+      this.$store.dispatch('meetups/leaveMeetup', this.meetup._id).then(() =>
+        this.$toasted.success('Left Meetup Successfully', {
+          position: 'top-center',
+          duration: 3000,
+        })
+      );
     },
   },
 };
