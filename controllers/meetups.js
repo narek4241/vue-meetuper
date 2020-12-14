@@ -1,5 +1,6 @@
 const { json } = require('body-parser');
 const Meetup = require('../models/meetups');
+const User = require('../models/users');
 
 exports.getMeetups = function (req, res) {
   Meetup.find({})
@@ -50,4 +51,67 @@ exports.createMeetup = (req, res) => {
 
     res.json(createdMeetup);
   });
+};
+
+// #note #v1 join meetup first implementation (working) fully opt
+// exports.joinMeetup = async (req, res) => {
+//   const { user } = req;
+//   const { id } = req.params;
+
+//   const meetup = await Meetup.findById(id);
+
+//   meetup.joinedPeople = [...meetup.joinedPeople, user];
+//   meetup.joinedPeopleCount++;
+
+//   meetup.save((err, meetup) => {
+//     if (err) {
+//       res.status().json({ errors: err });
+//     }
+
+//     res.send(meetup);
+//   });
+// };
+
+exports.joinMeetup = (req, res) => {
+  const { user } = req;
+  const { id } = req.params;
+
+  // #task #findOut how this works without adding async/await to this below
+  Meetup.findById(id, (errors, meetup) => {
+    if (errors) {
+      // #note {errors} <=> {errors: errors} chsm2 opt
+      res.status(422).send({ errors });
+    }
+
+    meetup.joinedPeople.push(user);
+    meetup.joinedPeopleCount++;
+
+    Promise.all([
+      meetup.save(),
+      User.updateOne({ _id: user._id }, { $push: { joinedMeetups: id } }),
+    ])
+      .then((result) => res.send({ id }))
+      .catch((errors) => res.status(422).send({ errors }));
+  });
+};
+
+exports.leaveMeetup = (req, res) => {
+  const { user } = req;
+  const { id } = req.params;
+
+  Promise.all([
+    Meetup.updateOne(
+      { _id: id },
+      {
+        // #task #findOut #syntax user._id
+        $pull: { joinedPeople: user._id },
+        $inc: { joinedPeopleCount: -1 },
+      }
+    ),
+    User.updateOne({ _id: user._id }, { $pull: { joinedMeetups: id } }),
+  ])
+    .then((result) => {
+      res.send({ id });
+    })
+    .catch((errors) => res.status(422).json({ errors }));
 };

@@ -16,6 +16,7 @@ const meetupSchema = new Schema({
   joinedPeopleCount: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  // #note "{type: Schema..., ref...}" syntax below referencing to other schemas (User) opt
   meetupCreator: { type: Schema.Types.ObjectId, ref: 'User' },
   joinedPeople: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
