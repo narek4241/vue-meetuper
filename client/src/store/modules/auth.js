@@ -26,8 +26,22 @@ export default {
       // return state.user || null;
       return state.user;
     },
+
     isAuthenticated(state) {
+      // #note "!!" to return true/false only opt
       return !!state.user;
+    },
+
+    isMeetupOwner: ({ user }) => (meetupCreatorId) => {
+      // #note has no vulnerabilites, if !!user === false instantly return false opt
+      return !!user && user._id === meetupCreatorId;
+    },
+
+    isMember: ({ user }) => (meetupId) => {
+      return (
+        // #note #dpl has no vulnerabilites, if !!user === false instantly return false opt
+        !!user && user.joinedMeetups && user.joinedMeetups.includes(meetupId)
+      );
     },
   },
 

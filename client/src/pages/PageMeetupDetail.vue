@@ -25,8 +25,7 @@
           </article>
         </div>
         <div class="is-pulled-right">
-          <!-- We will handle this later (: -->
-          <button class="button is-danger">Leave Group</button>
+          <button v-if="isMember" class="button is-danger">Leave Group</button>
         </div>
       </div>
     </section>
@@ -92,11 +91,14 @@
             <div class="content is-medium">
               <h3 class="title is-3">About the Meetup</h3>
               <p>{{ meetup.description }}</p>
-              <!-- Join Meetup, We will handle it later (: -->
-              <button class="button is-primary">Join In</button>
-              <!-- Not logged In Case, handle it later (: -->
-              <!-- <button :disabled="true"
-                      class="button is-warning">You need authenticate in order to join</button> -->
+              <button v-if="canJoin" class="button is-primary">Join In</button>
+              <button
+                v-if="!isAuthenticated"
+                :disabled="true"
+                class="button is-warning"
+              >
+                You need to authenticate in order to join
+              </button>
             </div>
             <!-- Thread List START -->
             <div class="content is-medium">
@@ -161,6 +163,12 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 export default {
+  created() {
+    const meetupId = this.$route.params.id;
+    this.fetchMeetup(meetupId);
+    this.fetchThreads(meetupId);
+  },
+
   computed: {
     ...mapState({
       meetup: (state) => state.meetups.item,
@@ -170,12 +178,19 @@ export default {
     meetupCreator() {
       return this.meetup.meetupCreator || {};
     },
-  },
 
-  created() {
-    const meetupId = this.$route.params.id;
-    this.fetchMeetup(meetupId);
-    this.fetchThreads(meetupId);
+    isAuthenticated() {
+      return this.$store.getters['auth/isAuthenticated'];
+    },
+    isMeetupOwner() {
+      return this.$store.getters['auth/isMeetupOwner'](this.meetupCreator._id);
+    },
+    isMember() {
+      return this.$store.getters['auth/isMember'](this.meetup._id);
+    },
+    canJoin() {
+      return this.isAuthenticated && !this.isMeetupOwner && !this.isMemeber;
+    },
   },
 
   methods: {
