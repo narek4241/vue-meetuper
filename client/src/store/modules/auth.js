@@ -1,3 +1,4 @@
+import Vue from 'vue'; // #task #2 (#dpl) check if could use it locally (without import)
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import axiosInstance from '@/services/axios';
@@ -110,6 +111,11 @@ export default {
           return err;
         });
     },
+
+    addMeetupToAuthUser({ state, commit }, meetup) {
+      const meetups = [...state.user.joinedMeetups, meetup];
+      commit('setMeetupsToAuthUser', meetups);
+    },
   },
 
   mutations: {
@@ -118,6 +124,10 @@ export default {
     },
     setAuthState(state, authState) {
       state.isAuthResolved = authState;
+    },
+
+    setMeetupsToAuthUser({ user }, joinedMeetups) {
+      Vue.set(user, 'joinedMeetups', joinedMeetups);
     },
   },
 };
