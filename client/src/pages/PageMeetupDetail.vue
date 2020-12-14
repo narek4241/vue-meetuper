@@ -237,8 +237,19 @@ export default {
     },
 
     createThread({ title, done }) {
-      console.log(title);
-      done();
+      // #note could also mapAction belows i.o dispatching opt
+      this.$store
+        .dispatch('threads/postThread', {
+          title,
+          meetupId: this.meetup._id,
+        })
+        .then(() => {
+          done();
+          this.$toasted.success('Thread added Succesfully', {
+            position: 'top-center',
+            duration: 3000,
+          });
+        });
     },
   },
 };
