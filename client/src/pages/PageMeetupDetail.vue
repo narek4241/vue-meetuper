@@ -68,14 +68,13 @@
               <p class="menu-label">
                 Threads
               </p>
-              <ul v-for="thread in threads" :key="thread._id">
+              <ul v-for="thread in orderedThreads" :key="thread._id">
                 <li>{{ thread.title }}</li>
               </ul>
               <p class="menu-label">
                 Who is Going
               </p>
               <div class="columns is-multiline is-mobile">
-                <!-- Joined People Images Here -->
                 <div
                   v-for="person in meetup.joinedPeople"
                   :key="person._id"
@@ -115,59 +114,10 @@
                 :title="'Create new Thread'"
               ></thread-create-modal>
             </div>
-            <!-- Thread List START -->
-            <div class="content is-medium">
-              <h3 class="title is-3">Threads</h3>
-              <div v-for="thread in threads" :key="thread._id" class="box">
-                <!-- Thread title -->
-                <h4 id="const" class="title is-3">
-                  {{ thread.title }}
-                </h4>
-                <!-- Create new post, handle later -->
-                <form class="post-create">
-                  <div class="field">
-                    <textarea
-                      class="textarea textarea-post"
-                      placeholder="Write a post"
-                      rows="1"
-                    ></textarea>
-                    <button :disabled="true" class="button is-primary m-t-sm">
-                      Send
-                    </button>
-                  </div>
-                </form>
-                <!-- Create new post END, handle later -->
-                <!-- Posts START -->
-                <article
-                  v-for="post in thread.posts"
-                  :key="post._id"
-                  class="media post-item"
-                >
-                  <figure class="media-left is-rounded user-image">
-                    <p class="image is-32x32">
-                      <img class="is-rounded" :src="post.user.avatar" />
-                    </p>
-                  </figure>
-                  <div class="media-content">
-                    <div class="content is-medium">
-                      <div class="post-content">
-                        <!-- Post User Name -->
-                        <strong class="author">{{ post.user.name }}</strong>
-                        {{ ' ' }}
-                        <!-- Post Updated at -->
-                        <small class="post-time">{{
-                          post.updatedAt | formatDate('LLL')
-                        }}</small>
-                        <br />
-                        <p class="post-content-message">{{ post.text }}</p>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-                <!-- Posts END -->
-              </div>
-            </div>
-            <!-- Thread List END -->
+            <thread-list
+              :canPost="canPost"
+              :threads="orderedThreads"
+            ></thread-list>
           </div>
         </div>
       </div>
@@ -178,10 +128,12 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 import ThreadCreateModal from '@/components/ThreadCreateModal';
+import ThreadList from '@/components/ThreadList';
 
 export default {
   components: {
     ThreadCreateModal,
+    ThreadList,
   },
   created() {
     const meetupId = this.$route.params.id;
@@ -211,6 +163,18 @@ export default {
     },
     canJoin() {
       return this.isAuthenticated && !this.isMeetupOwner && !this.isMember;
+    },
+
+    canPost() {
+      return this.isAuthenticated && (this.isMember || this.isMeetupOwner);
+    },
+
+    orderedThreads() {
+      // #note avoiding unexpected side effect warning opt
+      const copyOfThreads = [...this.threads];
+      return copyOfThreads.sort((thread, nextThread) => {
+        return new Date(nextThread.createdAt) - new Date(thread.createdAt);
+      });
     },
   },
 
@@ -345,48 +309,4 @@ li {
 .footer {
   background-color: white;
 }
-// Post Create Input START
-.textarea-post {
-  padding-bottom: 30px;
-}
-.post-create {
-  margin-bottom: 15px;
-}
-// Post Create END
-// Thread List START
-.content {
-  figure {
-    margin-bottom: 0;
-  }
-}
-.media-content-threads {
-  background-color: #f1f1f1;
-  padding: 3px 20px;
-  border-radius: 10px;
-  margin-right: 40px;
-  width: 100px;
-}
-.media-left.user-image {
-  margin: 0;
-  margin-right: 15px;
-}
-// .post-item {
-// }
-.media + .media {
-  border: none;
-  margin-top: 0;
-}
-.post-content {
-  margin: 0;
-  &-message {
-    font-size: 16px;
-  }
-  .author {
-    font-size: 18px;
-  }
-  .post-time {
-    font-size: 16px;
-  }
-}
-// Thread List END
 </style>
