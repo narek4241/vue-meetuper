@@ -5,7 +5,7 @@
       <h4 id="const" class="title is-3">
         {{ thread.title }}
       </h4>
-      <post-create v-if="canPost"></post-create>
+      <post-create v-if="canPost" :threadId="thread._id"></post-create>
       <article
         v-for="post in thread.posts"
         :key="post._id"

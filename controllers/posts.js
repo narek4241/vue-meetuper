@@ -27,10 +27,10 @@ exports.sendPost = (req, res) => {
 
     Thread.update(
       { _id: createdPost.thread },
-      // #note1 we can also push an ID i.o createdPost itself (my*) opt
+      // #note2 we can also push an ID i.o object itself (watch schemas)(my) opt
       { $push: { posts: createdPost } },
       () => {
-        res.send({ createdPost });
+        res.send(createdPost);
       }
     );
   });

@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import axios from 'axios';
 import axiosInstance from '@/services/axios';
 
@@ -42,11 +43,41 @@ export default {
         );
       });
     },
+
+    sendPost({ dispatch }, { text, threadId }) {
+      const post = {
+        text,
+        thread: threadId,
+      };
+
+      return axiosInstance.post('/api/v1/posts', post).then((res) => {
+        const createdPost = res.data;
+        dispatch('addPostToThread', { post: createdPost, threadId });
+
+        return createdPost;
+      });
+    },
+
+    addPostToThread({ state, commit }, { post, threadId }) {
+      const threadIndex = state.items.findIndex(
+        (thread) => thread._id === threadId
+      );
+
+      if (threadIndex > -1) {
+        const { posts } = state.items[threadIndex];
+        posts.unshift(post);
+      }
+
+      commit('savePostToThread', {
+        posts: this.posts,
+        threadIndex: this.threadIndex,
+      });
+    },
   },
 
   mutations: {
-    setThreads(state, threads) {
-      state.items = threads;
+    savePostToThread(state, { posts, threadIndex }) {
+      Vue.set(state.items, threadIndex, { posts });
     },
   },
 };
