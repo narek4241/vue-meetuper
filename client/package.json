@@ -16,6 +16,7 @@
     "moment": "^2.23.0",
     "node-sass": "^4.14.1",
     "sass-loader": "^7.3.1",
+    "socket.io-client": "^2.2.0",
     "vue": "^2.6.11",
     "vue-router": "^3.4.9",
     "vue-toasted": "^1.1.28",

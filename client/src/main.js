@@ -2,6 +2,7 @@ import Vue from 'vue';
 import router from './router';
 import store from './store';
 import vuelidate from 'vuelidate';
+import io from 'socket.io-client';
 
 import App from './App.vue';
 import AppDropdown from './components/shared/AppDropdown';
@@ -35,6 +36,9 @@ Vue.filter('formatDate', function(value, formatType = 'LL') {
   if (!value) return;
   return moment(value).format(formatType);
 });
+
+// #task import from configs
+io('http://localhost:3001');
 
 new Vue({
   router,
