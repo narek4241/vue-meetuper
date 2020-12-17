@@ -46,7 +46,8 @@ export default {
           text: this.text,
           threadId: this.threadId,
         })
-        .then(() => {
+        .then((createdPost) => {
+          this.$root.socket.emit('meetup/sendPost', createdPost);
           this.text = null;
         });
     },
