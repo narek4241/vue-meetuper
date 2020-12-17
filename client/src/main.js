@@ -2,13 +2,13 @@ import Vue from 'vue';
 import router from './router';
 import store from './store';
 import vuelidate from 'vuelidate';
-import io from 'socket.io-client';
 
 import App from './App.vue';
 import AppDropdown from './components/shared/AppDropdown';
 import AppHero from './components/shared/AppHero';
 import AppSpinner from './components/shared/AppSpinner';
 import toasted from 'vue-toasted';
+import AppSocket from './plugins/socket';
 
 // #task #res usage opt
 import moment from 'moment';
@@ -20,11 +20,11 @@ Vue.component('AppSpinner', AppSpinner);
 Vue.component('AppHero', AppHero);
 Vue.component('AppDropdown', AppDropdown);
 
-// #task #findOut usage2
 Vue.use(vuelidate);
 Vue.use(toasted);
+// #task import from configs (localhost)
+Vue.use(AppSocket, { connection: 'http://localhost:3001' });
 
-// #task #findOut2.5 usage
 Vue.filter('capitalize', function(value) {
   if (value && typeof value === 'string') {
     return value.charAt(0).toUpperCase() + value.slice(1);
@@ -37,15 +37,7 @@ Vue.filter('formatDate', function(value, formatType = 'LL') {
   return moment(value).format(formatType);
 });
 
-// #task import from configs
-const socket = io('http://localhost:3001');
-
 new Vue({
-  data() {
-    return {
-      socket,
-    };
-  },
   router,
   store,
   vuelidate,
