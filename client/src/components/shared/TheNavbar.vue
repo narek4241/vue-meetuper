@@ -98,7 +98,10 @@ export default {
 
   methods: {
     logout() {
-      this.$store.dispatch('auth/logout').catch((err) => console.error(err));
+      this.$store
+        .dispatch('auth/logout')
+        .then(() => this.$router.push('/'))
+        .catch((err) => console.error(err));
     },
     toProfilePage() {
       this.$router.push('/profile');
