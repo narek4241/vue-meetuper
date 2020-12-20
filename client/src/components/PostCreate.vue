@@ -39,6 +39,12 @@ export default {
     };
   },
 
+  computed: {
+    meetup() {
+      return this.$store.state.meetups.item;
+    },
+  },
+
   methods: {
     sendPost() {
       this.$store
@@ -47,7 +53,10 @@ export default {
           threadId: this.threadId,
         })
         .then((createdPost) => {
-          this.$socket.emit('meetup/sendPost', createdPost);
+          this.$socket.emit('meetup/postSaved', {
+            ...createdPost,
+            meetup: this.meetup._id,
+          });
           this.text = null;
         });
     },
