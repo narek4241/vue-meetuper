@@ -112,6 +112,18 @@ export default {
         });
     },
 
+    updateUser({ commit }, user) {
+      const userId = user._id;
+
+      return axiosInstance
+        .patch('/api/v1/users/' + userId, user)
+        .then((res) => {
+          const updatedUser = res.data;
+          commit('setAuthUser', updatedUser);
+          return updatedUser;
+        });
+    },
+
     addMeetupToAuthUser({ state, commit }, meetup) {
       const meetups = [...state.user.joinedMeetups, meetup];
       commit('setMeetupsToAuthUser', meetups);

@@ -10,125 +10,137 @@
           </div>
           <div class="column is-4-tablet is-10-mobile name">
             <p>
-              <span class="title is-bold">@{{ user.name }}</span>
+              <span class="title is-bold">{{ user.name }}</span>
               <br />
-              <!-- Here will be user update functionality -->
-              <button class="button is-primary is-outlined m-t-sm">
-                Update Info
-              </button>
+              <user-update-modal
+                @formSubmitted="updateUser"
+              ></user-update-modal>
               <br />
             </p>
             <p class="tagline">
               {{ user.info }}
             </p>
           </div>
-          <!-- TODO: Set Active Tab to 'meetups' and class to 'isActive' -->
           <div
-            class="stats-tab column is-2-tablet is-4-mobile has-text-centered"
+            @click="activeTab = 'meetups'"
+            :class="[
+              'stats-tab column is-2-tablet is-4-mobile has-text-centered',
+              { isActive: activeTab === 'meetups' },
+            ]"
           >
             <p class="stat-val">{{ meetupsCount }}</p>
             <p class="stat-key">Meetups</p>
           </div>
-          <!-- TODO: Set Active Tab to 'threads' and class to 'isActive' -->
           <div
-            class="stats-tab column is-2-tablet is-4-mobile has-text-centered"
+            @click="activeTab = 'threads'"
+            :class="[
+              'stats-tab column is-2-tablet is-4-mobile has-text-centered',
+              { isActive: activeTab === 'threads' },
+            ]"
           >
             <p class="stat-val">{{ threadsCount }}</p>
             <p class="stat-key">Threads</p>
           </div>
-          <!-- TODO: Set Active Tab to 'posts' and class to 'isActive' -->
           <div
-            class="stats-tab column is-2-tablet is-4-mobile has-text-centered"
+            @click="activeTab = 'posts'"
+            :class="[
+              'stats-tab column is-2-tablet is-4-mobile has-text-centered',
+              { isActive: activeTab === 'posts' },
+            ]"
           >
             <p class="stat-val">{{ postsCount }}</p>
             <p class="stat-key">Posts</p>
           </div>
         </div>
       </div>
-      <!-- TODO: Display this div when activeTab === 'meetups' -->
-      <div
-        v-for="meetup in meetups"
-        :key="meetup._id"
-        class="columns is-mobile is-multiline"
-      >
-        <div class="column is-3-tablet is-6-mobile">
-          <div class="card">
-            <div class="card-image">
-              <figure class="image is-4by3">
-                <img :src="meetup.image" />
-              </figure>
-            </div>
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <p class="title is-4">{{ meetup.title }}</p>
-                  <p class="subtitle is-6">
-                    <span class="tag is-dark subtitle">{{
-                      meetup.category.name
-                    }}</span>
+
+      <div v-if="activeTab === 'meetups'">
+        <div
+          v-for="meetup in meetups"
+          :key="meetup._id"
+          class="columns is-mobile is-multiline"
+        >
+          <div class="column is-3-tablet is-6-mobile">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-4by3">
+                  <img :src="meetup.image" />
+                </figure>
+              </div>
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <p class="title is-4">{{ meetup.title }}</p>
+                    <p class="subtitle is-6">
+                      <span class="tag is-dark subtitle">{{
+                        meetup.category.name
+                      }}</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="content">
+                  <p>
+                    {{ meetup.shortInfo }}
                   </p>
                 </div>
               </div>
-              <div class="content">
-                <p>
-                  {{ meetup.shortInfo }}
-                </p>
-              </div>
+              <footer class="card-footer">
+                <a class="card-footer-item">Share</a>
+                <a class="card-footer-item">Delete</a>
+              </footer>
             </div>
-            <footer class="card-footer">
-              <a class="card-footer-item">Share</a>
-              <a class="card-footer-item">Delete</a>
-            </footer>
+            <br />
           </div>
-          <br />
         </div>
       </div>
 
-      <!-- TODO: Display this div when activeTab === 'threads' -->
-      <div
-        v-for="thread in threads"
-        :key="thread._id"
-        class="columns is-mobile is-multiline"
-      >
-        <div class="column is-3-tablet is-6-mobile">
-          <div class="card">
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <p class="title is-4">{{ thread.title }}</p>
+      <div v-if="activeTab === 'threads'">
+        <div
+          v-for="thread in threads"
+          :key="thread._id"
+          class="columns is-mobile is-multiline"
+        >
+          <div class="column is-3-tablet is-6-mobile">
+            <div class="card">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <p class="title is-4">{{ thread.title }}</p>
+                  </div>
                 </div>
               </div>
+              <footer class="card-footer">
+                <a class="card-footer-item">Share</a>
+                <a class="card-footer-item">Delete</a>
+              </footer>
             </div>
-            <footer class="card-footer">
-              <a class="card-footer-item">Share</a>
-              <a class="card-footer-item">Delete</a>
-            </footer>
+            <br />
           </div>
-          <br />
         </div>
       </div>
 
-      <!-- TODO: Display this div when activeTab === 'posts' -->
-      <div
-        v-for="post in posts"
-        :key="post._id"
-        class="columns is-mobile is-multiline"
-      >
-        <div class="column is-3-tablet is-6-mobile">
-          <div class="card">
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <p class="title is-4">{{ post.text }}</p>
+      <div v-if="activeTab === 'posts'">
+        <div
+          v-for="post in posts"
+          :key="post._id"
+          class="columns is-mobile is-multiline"
+        >
+          <div class="column is-3-tablet is-6-mobile">
+            <div class="card">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <p class="title is-4">{{ post.text }}</p>
+                  </div>
                 </div>
               </div>
+              <footer class="card-footer">
+                <a class="card-footer-item">Share</a>
+                <a class="card-footer-item">Delete</a>
+              </footer>
             </div>
-            <footer class="card-footer">
-              <a class="card-footer-item">Share</a>
-              <a class="card-footer-item">Delete</a>
-            </footer>
+            <br />
           </div>
-          <br />
         </div>
       </div>
     </div>
@@ -137,8 +149,11 @@
 
 <script>
 import { mapState } from 'vuex';
+import UserUpdateModal from '@/components/UserUpdateModal';
 
 export default {
+  components: { UserUpdateModal },
+
   created() {
     this.$store.dispatch('stats/fetchUserStats');
   },
@@ -153,6 +168,30 @@ export default {
       posts: ({ stats }) => stats.posts.data,
       postsCount: ({ stats }) => stats.posts.count,
     }),
+  },
+
+  data() {
+    return {
+      activeTab: 'meetups',
+    };
+  },
+
+  methods: {
+    updateUser({ user, done }) {
+      this.$store
+        .dispatch('auth/updateUser', user)
+        .then(() => {
+          done();
+          this.$toasted.success('Profile Successfully Updated', {
+            position: 'top-center',
+            duration: 3000,
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          done();
+        });
+    },
   },
 };
 </script>

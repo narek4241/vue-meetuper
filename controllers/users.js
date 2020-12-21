@@ -210,10 +210,11 @@ exports.getUserActivity = (req, res) => {
 
 exports.updateUser = (req, res) => {
   const userId = req.params.id;
-  const user = { req };
+  const user = req.user;
   const userData = req.body;
 
-  if (user._id === userId) {
+  // #note user.id not user._id, debugged opt
+  if (user.id === userId) {
     User.findByIdAndUpdate(
       userId,
       { $set: userData },
@@ -224,11 +225,7 @@ exports.updateUser = (req, res) => {
         }
         return res.json(updatedUser);
       }
-    )
-      .then(() => {
-        console.log('success');
-      })
-      .catch((err) => res.status(422).send({ err }));
+    ).catch((err) => res.status(422).send({ err }));
   } else {
     res.status(401).send({ errors: 'Authorization Error' });
   }
