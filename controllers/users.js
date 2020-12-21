@@ -1,6 +1,6 @@
 const passport = require('passport');
 const User = require('../models/users');
-const Meetup = require('../models/meetup');
+const Meetup = require('../models/meetups');
 const Thread = require('../models/threads');
 const Post = require('../models/posts');
 const Category = require('../models/categories');

@@ -59,9 +59,9 @@
             Account
           </a>
           <div class="navbar-dropdown">
-            <a @click.prevent="toProfilePage" href="#" class="navbar-item">
+            <router-link :to="{ name: 'PageProfile' }" class="navbar-item">
               Profile
-            </a>
+            </router-link>
             <hr class="navbar-divider" />
             <a @click.prevent="logout" class="navbar-item">
               Logout
@@ -102,9 +102,6 @@ export default {
         .dispatch('auth/logout')
         .then(() => this.$router.push('/'))
         .catch((err) => console.error(err));
-    },
-    toProfilePage() {
-      this.$router.push('/profile');
     },
   },
 };

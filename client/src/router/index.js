@@ -22,7 +22,7 @@ const router = new Router({
       component: PageHome,
     },
     {
-      path: '/profile',
+      path: '/me',
       name: 'PageProfile',
       component: PageProfile,
       meta: { onlyAuthUser: true },
