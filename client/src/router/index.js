@@ -43,6 +43,11 @@ const router = new Router({
       path: '/find',
       name: 'PageMeetupFind',
       component: PageMeetupFind,
+      // #task replace isLocationResolved func-ity here, form App.vue
+      // rm
+      // component: () => {
+      //   return ..
+      // },
     },
     {
       path: '/register',
