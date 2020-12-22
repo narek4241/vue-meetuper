@@ -2,9 +2,9 @@
   <div>
     <h1 class="title m-b-sm">What's your new Meetup location?</h1>
     <div class="m-b-lg">
-      <span class="subtitle">New York, US</span>
-      <a>(change location)</a>
-      <input @input="emitFormData" @blur="$v.form.location.$touch()" v-model="form.location" type="text" class="input">
+      <span v-if="ipLocation && !wantChangeLocation" class="subtitle">{{ipLocation}}</span>
+      <a v-if="ipLocation" @click="toggleLocation"> {{wantChangeLocation ? '(Set Default Location)' : '(change location)'}} </a>
+      <input v-if="!ipLocation || wantChangeLocation" @input="emitFormData" @blur="$v.form.location.$touch()" v-model="form.location" type="text" class="input">
       <div v-if="$v.form.location.$error">
         <span v-if="!$v.form.location.required" class="help is-danger">Location is required</span>
       </div>
@@ -17,9 +17,10 @@
   export default {
     data () {
       return {
-         form: {
-           location: null,
-        }
+        form: {
+          location: null,
+        },
+        wantChangeLocation: false,
       }
     },
     
@@ -29,9 +30,30 @@
       }
     },
 
+    created(){
+      if(this.ipLocation){
+        this.form.location = this.ipLocation;
+        this.emitFormData()
+      }
+    },
+
+    computed:{
+      ipLocation(){
+        return this.$store.getters['meta/location']
+      }
+    },
+
     methods: {
       emitFormData(){
         this.$emit('formUpdated', {data: this.form, isValid: !this.$v.$invalid})
+      },
+
+      toggleLocation(){
+        if(this.ipLocation){
+          this.form.location = this.ipLocation
+          this.emitFormData()
+        }
+        this.wantChangeLocation = !this.wantChangeLocation;
       }
     }
   }

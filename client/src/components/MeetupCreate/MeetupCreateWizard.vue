@@ -57,6 +57,8 @@
         Confirm
       </button>
     </div>
+    <!-- #note nicely formatted (code) data opt -->
+    <!-- <pre><code>{{form}}</code></pre> -->
   </div>
 </template>
 
