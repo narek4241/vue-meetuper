@@ -2,15 +2,28 @@ const { json } = require('body-parser');
 const Meetup = require('../models/meetups');
 const User = require('../models/users');
 
-exports.getMeetups = function (req, res) {
-  Meetup.find({})
+exports.getMeetups = (req, res) => {
+  const { category } = req.query;
+  const { location } = req.query;
+
+  const findQuery = location
+    ? // #note '.*' every character 0 || 0+ times
+      Meetup.find({ processedLocation: { $regex: '.*' + location + '.*' } })
+    : Meetup.find({});
+
+  findQuery
     .populate('category')
     .populate('joinedPeople')
+    .limit(5)
+    .sort({ createdAt: -1 })
     .exec((errors, meetups) => {
       if (errors) {
         return res.status(422).send({ errors });
       }
-
+      // #note WARNING: requires improvement, can decrease performance (!my) opt
+      if (category) {
+        meetups = meetups.filter((meetup) => meetup.category.name === category);
+      }
       return res.json(meetups);
     });
 };
