@@ -47,7 +47,6 @@ const router = new Router({
         let isLocationResolved = store.getters['meta/isLocationResolved'];
         if (!isLocationResolved) {
           store.dispatch('meta/fetchMetaData').then(() => {
-            // #note reassigning after dispatch opt
             isLocationResolved = store.getters['meta/isLocationResolved'];
             if (isLocationResolved) {
               next();
@@ -58,6 +57,27 @@ const router = new Router({
         }
       },
     },
+
+    {
+      path: '/find/:category',
+      name: 'PageMeetupFindCategory',
+      component: PageMeetupFind,
+      props: true,
+      beforeEnter: (to, from, next) => {
+        let isLocationResolved = store.getters['meta/isLocationResolved'];
+        if (!isLocationResolved) {
+          store.dispatch('meta/fetchMetaData').then(() => {
+            isLocationResolved = store.getters['meta/isLocationResolved'];
+            if (isLocationResolved) {
+              next();
+            }
+          });
+        } else {
+          next();
+        }
+      },
+    },
+
     {
       path: '/register',
       name: 'PageRegister',

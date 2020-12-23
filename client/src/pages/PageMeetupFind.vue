@@ -9,6 +9,7 @@
               <div class="level-item">
                 <input
                   @keyup.enter="fetchMeetups"
+                  @input="displaySearchQuery = false"
                   v-model="searchedLocation"
                   type="text"
                   class="input"
@@ -16,10 +17,20 @@
                 />
               </div>
               <div
-                v-if="searchedLocation && meetups && meetups.length > 0"
+                v-if="
+                  searchedLocation &&
+                    meetups &&
+                    meetups.length > 0 &&
+                    displaySearchQuery
+                "
                 class="level-item"
               >
                 <span>Meetups in {{ meetups[0].location }}</span>
+              </div>
+              <div v-if="category" class="level-item">
+                <button @click="cancelCategory" class="button is-danger">
+                  {{ category }} X
+                </button>
               </div>
             </div>
             <div class="level-right">
@@ -32,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div class="container">
+    <div v-if="pageLoader_isDataLoaded" class="container">
       <section class="section page-find">
         <div
           v-if="meetups && meetups.length > 0"
@@ -89,7 +100,17 @@
 </template>
 
 <script>
+import pageLoader from '@/mixins/pageLoader';
 export default {
+  props: {
+    category: {
+      type: String,
+      required: false,
+    },
+  },
+
+  mixins: [pageLoader],
+
   computed: {
     meetups() {
       return this.$store.state.meetups.items;
@@ -104,6 +125,8 @@ export default {
     return {
       searchedLocation: this.$store.getters['meta/location'],
       filter: {},
+      // #note span(Meetups in...) opt
+      displaySearchQuery: true,
     };
   },
 
@@ -115,7 +138,25 @@ export default {
           .replace(/[\s,]+/g, '')
           .trim();
       }
-      this.$store.dispatch('meetups/fetchMeetups', { filter: this.filter });
+      if (this.category) {
+        this.filter.category = this.category;
+      }
+
+      this.pageLoader_isDataLoaded = false;
+      this.$store
+        .dispatch('meetups/fetchMeetups', { filter: this.filter })
+        .then(() => {
+          this.pageLoader_resolveData();
+          this.displaySearchQuery = true;
+        })
+        .catch((err) => {
+          this.pageLoader_resolveData();
+          console.error(err);
+        });
+    },
+
+    cancelCategory() {
+      this.$router.push({ name: 'PageMeetupFind' });
     },
   },
 };

@@ -2,7 +2,8 @@
   <div v-if="isAuthResolved" id="app">
     <TheNavbar />
     <div class="page-wrapper">
-      <router-view class="page-content" />
+      <!-- #note key is for detecting route changes (in order to render) opt -->
+      <router-view :key="$route.path" class="page-content" />
     </div>
     <TheFooter />
   </div>
