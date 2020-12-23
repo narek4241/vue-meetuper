@@ -18,3 +18,26 @@ export const rejectError = (error) => {
 
   return Promise.reject(message);
 };
+
+export const applyFilters = (url, filter) => {
+  if (filter) {
+    let filterEntities = '';
+    if (url.indexOf('?') === -1) {
+      url += '?';
+    } else {
+      url += '&';
+    }
+
+    Object.keys(filter).forEach((key) => {
+      filterEntities += `${key}=${filter[key]}&`;
+    });
+
+    if (filterEntities.slice(-1) === '&') {
+      filterEntities = filterEntities.slice(0, -1);
+    }
+
+    url += filterEntities;
+  }
+
+  return url;
+};
