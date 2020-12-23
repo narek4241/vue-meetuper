@@ -43,11 +43,20 @@ const router = new Router({
       path: '/find',
       name: 'PageMeetupFind',
       component: PageMeetupFind,
-      // #task replace isLocationResolved func-ity here, form App.vue
-      // rm
-      // component: () => {
-      //   return ..
-      // },
+      beforeEnter: (to, from, next) => {
+        let isLocationResolved = store.getters['meta/isLocationResolved'];
+        if (!isLocationResolved) {
+          store.dispatch('meta/fetchMetaData').then(() => {
+            // #note reassigning after dispatch opt
+            isLocationResolved = store.getters['meta/isLocationResolved'];
+            if (isLocationResolved) {
+              next();
+            }
+          });
+        } else {
+          next();
+        }
+      },
     },
     {
       path: '/register',

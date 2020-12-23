@@ -12,6 +12,9 @@ export default {
   },
 
   getters: {
+    isLocationResolved(state) {
+      return state.isLocationResolved;
+    },
     location(state) {
       const { city, country } = state.item;
       return city && country ? `${city}, ${country}` : null;
