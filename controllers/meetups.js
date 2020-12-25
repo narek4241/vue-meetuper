@@ -3,8 +3,7 @@ const Meetup = require('../models/meetups');
 const User = require('../models/users');
 
 exports.getMeetups = (req, res) => {
-  const { category } = req.query;
-  const { location } = req.query;
+  const { category, location } = req.query;
 
   const findQuery = location
     ? // #note '.*' every character 0 || 0+ times

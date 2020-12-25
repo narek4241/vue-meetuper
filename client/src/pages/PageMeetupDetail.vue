@@ -118,6 +118,14 @@
               :canPost="canPost"
               :threads="orderedThreads"
             ></thread-list>
+
+            <button
+              v-if="!isAllThreadsLoaded"
+              @click="fetchThreadsHandler"
+              class="button is-primary"
+            >
+              Load More
+            </button>
           </div>
         </div>
       </div>
@@ -140,6 +148,7 @@ export default {
     ...mapState({
       meetup: (state) => state.meetups.item,
       threads: (state) => state.threads.items,
+      isAllThreadsLoaded: (state) => state.threads.isAllThreadsLoaded,
       authUser: (state) => state.auth.user,
     }),
 
@@ -176,7 +185,7 @@ export default {
   created() {
     const meetupId = this.$route.params.id;
     this.fetchMeetup(meetupId);
-    this.fetchThreadsHandler({ meetupId });
+    this.fetchThreadsHandler({ meetupId, init: true });
 
     if (this.isAuthenticated) {
       this.$socket.emit('meetup/subscribe', meetupId);
@@ -238,13 +247,18 @@ export default {
         });
     },
 
-    fetchThreadsHandler({ meetupId }) {
+    fetchThreadsHandler({ meetupId, init }) {
       const filter = {
         pageNumber: this.threadsPageNumber,
         pageSize: this.threadsPageSize,
       };
 
-      this.fetchThreads({ meetupId, filter }).then(() => {
+      // #note setting 'meetupId' default value (for bear calling) opt
+      this.fetchThreads({
+        meetupId: meetupId || this.meetup._id,
+        filter,
+        init,
+      }).then(() => {
         this.threadsPageNumber++;
       });
     },
