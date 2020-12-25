@@ -2,15 +2,16 @@ const Thread = require('../models/threads');
 
 exports.getThreads = (req, res) => {
   const { meetupId } = req.query;
-  const pageSize = req.query.pageSize || 5;
-  const pageNumber = req.query.pageNumber || 1;
+  const pageSize = parseInt(req.query.pageSize) || 5;
+  const pageNumber = parseInt(req.query.pageNumber) || 1;
 
   const skips = pageSize * (pageNumber - 1);
 
   Thread.find({})
     .where({ meetup: meetupId })
-    .skip(parseInt(skips))
+    .skip(skips)
     .limit(pageSize + 1)
+    .sort({ createdAt: -1 })
     .populate({
       path: 'posts',
       options: { limit: 5, sort: { createdAt: -1 } },
@@ -18,14 +19,18 @@ exports.getThreads = (req, res) => {
     })
     .exec((errors, threads) => {
       if (errors) {
-        res.status(422).send(errors);
+        return res.status(422).send(errors);
       }
 
       let isAllDataLoaded = false;
-      if (threads.length <= 5) {
+      // #note initially was set to static 5, now changed (my) opt
+      if (threads.length <= pageSize) {
         isAllDataLoaded = true;
       }
-      res.send({ threads: threads.splice(0, 5), isAllDataLoaded });
+      return res.send({
+        threads: threads.splice(0, pageSize),
+        isAllDataLoaded,
+      });
     });
 };
 

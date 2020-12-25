@@ -176,7 +176,7 @@ export default {
   created() {
     const meetupId = this.$route.params.id;
     this.fetchMeetup(meetupId);
-    this.fetchThreads(meetupId);
+    this.fetchThreadsHandler({ meetupId });
 
     if (this.isAuthenticated) {
       this.$socket.emit('meetup/subscribe', meetupId);
@@ -184,13 +184,20 @@ export default {
     }
   },
 
-  // #task #res destroyed() usage
+  // #task #res2 destroyed() usage
   destroyed() {
     this.$socket.removeListener(
       'meetup/postPublished',
       this.addPostToThreadHandler
     );
     this.$socket.emit('meetup/unsubscribe', this.meetup._id);
+  },
+
+  data() {
+    return {
+      threadsPageSize: 5,
+      threadsPageNumber: 1,
+    };
   },
 
   methods: {
@@ -229,6 +236,17 @@ export default {
             duration: 3000,
           });
         });
+    },
+
+    fetchThreadsHandler({ meetupId }) {
+      const filter = {
+        pageNumber: this.threadsPageNumber,
+        pageSize: this.threadsPageSize,
+      };
+
+      this.fetchThreads({ meetupId, filter }).then(() => {
+        this.threadsPageNumber++;
+      });
     },
 
     addPostToThreadHandler(post) {
