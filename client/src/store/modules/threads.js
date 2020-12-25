@@ -6,18 +6,22 @@ export default {
   namespaced: true,
 
   state: {
+    isAllThreadsLoaded: false,
     items: [],
   },
 
   actions: {
     fetchThreads({ state, commit }, meetupId) {
       return axios.get(`/api/v1/threads?meetupId=${meetupId}`).then((res) => {
-        const threads = res.data;
+        const { threads, isAllDataLoaded } = res.data;
+
         commit(
           'setItems',
           { resource: 'threads', items: threads },
           { root: true }
         );
+        commit('setIsAllThreadsLoaded', isAllDataLoaded);
+
         return state.items;
       });
     },
@@ -78,6 +82,10 @@ export default {
   mutations: {
     savePostToThread(state, { posts, threadIndex }) {
       Vue.set(state.items, threadIndex, { posts });
+    },
+
+    setIsAllThreadsLoaded(state, isAllDataLoaded) {
+      state.isAllThreadsLoaded = isAllDataLoaded;
     },
   },
 };
