@@ -4,10 +4,10 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { MONGO_URI, PORT, NODE_ENV, SESSION_SECRET } = require('./config');
 
-const session = require('express-session');
-const passport = require('passport');
-
 // #note Only for "Session" Authentication
+// const session = require('express-session');
+// const passport = require('passport');
+
 // const MongoDBStore = require('connect-mongodb-session')(session);
 // const store = new MongoDBStore({
 //   uri: MONGO_URI,
@@ -68,8 +68,9 @@ app.use('/api/v1/posts', postsRoutes);
 app.use('/api/v1/threads', threadsRoutes);
 app.use('/api/v1/categories', categoriesRoutes);
 
+// #task #res2 syntax, usage
 if (NODE_ENV === 'development') {
-  app.get('/', (req, res) => res.status(200).send('Hello world'));
+  app.get('/', (req, res) => res.status(200).send('Express App'));
 } else if (NODE_ENV === 'production') {
   app.use(express.static('client/dist'));
   app.get('/', (req, res) => {

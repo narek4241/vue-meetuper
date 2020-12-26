@@ -23,10 +23,8 @@ Vue.component('AppDropdown', AppDropdown);
 Vue.use(vuelidate);
 Vue.use(toasted);
 
-// #task import from configs -> check worklow IMPORTANT
-// #note smth like this (connection: process.env.BASE_URL || 'http://localhost:3001',)
 Vue.use(AppSocket, {
-  connection: 'http://localhost:3001',
+  connection: `${process.env.VUE_APP_URI}`,
 });
 
 Vue.filter('capitalize', function(value) {
