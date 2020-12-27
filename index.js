@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { MONGO_URI, PORT, NODE_ENV, SESSION_SECRET } = require('./config');
+const path = require('path');
 
 // #note Only for "Session" Authentication
 // const session = require('express-session');
@@ -68,12 +69,12 @@ app.use('/api/v1/posts', postsRoutes);
 app.use('/api/v1/threads', threadsRoutes);
 app.use('/api/v1/categories', categoriesRoutes);
 
-// #task #res2 syntax, usage
+// #task #res2 syntax, usage opt
 if (NODE_ENV === 'development') {
   app.get('/', (req, res) => res.status(200).send('Express App'));
 } else if (NODE_ENV === 'production') {
   app.use(express.static('client/dist'));
-  app.get('/', (req, res) => {
+  app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
   });
 }
