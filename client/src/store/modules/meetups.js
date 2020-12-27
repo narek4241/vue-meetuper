@@ -57,6 +57,20 @@ export default {
         .then((res) => res.data);
     },
 
+    updateMeetup({ commit }, meetupData) {
+      meetupData.processedLocation = meetupData.location
+        .toLowerCase()
+        .replace(/[\s,]+/g, '')
+        .trim();
+
+      return axiosInstance
+        .patch(`/api/v1/meetups/${meetupData._id}`, meetupData)
+        .then((res) => {
+          const updatedMeetup = res.data;
+          commit('mergeMeetup', updatedMeetup);
+        });
+    },
+
     joinMeetup({ rootState, state, dispatch, commit }, meetupId) {
       const user = rootState.auth.user;
 
@@ -92,6 +106,10 @@ export default {
   mutations: {
     addUsersToMeetup({ item }, joinedPeople) {
       Vue.set(item, 'joinedPeople', joinedPeople);
+    },
+
+    mergeMeetup(state, updatedMeetup) {
+      state.item = { ...state.item, ...updatedMeetup };
     },
   },
 };

@@ -29,8 +29,12 @@
           </article>
         </div>
         <div class="is-pulled-right">
-          <!-- Update Button -->
-          <button class="button is-success is-large">Update</button>
+          <button
+            @click="updateMeetupHandler"
+            class="button is-success is-large"
+          >
+            Update
+          </button>
         </div>
       </div>
     </section>
@@ -161,11 +165,11 @@ export default {
   },
 
   methods: {
-    ...mapActions('meetups', ['fetchMeetup']),
+    ...mapActions('meetups', ['fetchMeetup', 'updateMeetup']),
     fetchMeetupHandler() {
       this.fetchMeetup(this.meetupId)
         .then(() => {
-          // #task better to do below's, in router opt
+          // #task move below func-ity, in router opt
           if (this.authUser._id !== this.meetupCreator._id) {
             this.$router.push('/not-authorized');
           }
@@ -173,7 +177,7 @@ export default {
         .catch((error) => console.error(error));
     },
 
-    // #note implement parseDate if needed opt
+    // #note implement parseDate if needed (note: tutor did) opt
 
     setDate(date) {
       this.meetup.startDate = moment(date).format();
@@ -183,6 +187,19 @@ export default {
       const hours = data.HH || '00';
       const minutes = data.mm || '00';
       this.meetup[field] = `${hours}:${minutes}`;
+    },
+
+    updateMeetupHandler() {
+      this.updateMeetup(this.meetup)
+        .then(() => {
+          this.$toasted.success('Meetup Successfully Updated', {
+            position: 'top-center',
+            duration: 3000,
+          });
+          // #task navigate to PageMeetupDeatil instead
+          this.$router.push('/');
+        })
+        .catch((err) => console.error(err));
     },
   },
 };
