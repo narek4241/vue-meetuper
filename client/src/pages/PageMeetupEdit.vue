@@ -4,26 +4,25 @@
       <div class="hero-body">
         <div class="container">
           <h2 class="subtitle">
-            <!-- TODO: Display meetup start date -->
-            Some Date
+            {{ meetup.startDate | formatDate }}
           </h2>
           <div class="field">
-            <!-- TODO: Bind meetup title -->
-            Some Meetup Title
-            <input class="title input w-50" type="text" />
+            <input
+              v-model="meetup.title"
+              class="title input w-50"
+              type="text"
+            />
           </div>
           <article class="media v-center">
             <figure class="media-left">
               <p class="image is-64x64">
-                <!-- TODO: Display meetup creator avatar -->
-                <img class="is-rounded" />
+                <img :src="meetupCreator.avatar" class="is-rounded" />
               </p>
             </figure>
             <div class="media-content">
               <div class="content">
                 <p>
-                  <!-- TODO: Display meetup creator name -->
-                  Created by <strong>Name Here</strong>
+                  Created by <strong>{{ meetupCreator.name }}</strong>
                 </p>
               </div>
             </div>
@@ -42,42 +41,48 @@
             <aside class="is-medium menu">
               <div class="meetup-side-box">
                 <div class="meetup-side-box-date m-b-sm">
-                  <!-- TIMES START -->
                   <p><b>Time</b></p>
-                  <!-- TODO - OPTIONAL - Make dates and times working -->
-                  <!-- Implementation almost the same as in create meetup -->
-
-                  <!-- 1. Disable Dates -->
-                  <!-- 2. Set Date on @input event-->
-                  <!-- 3. Display actual meetup startDate in :value -->
                   <datepicker
-                    :value="new Date()"
+                    @input="setDate"
+                    :value="meetup.startDate | formatDate"
+                    :disabled-dates="disabledDates"
                     :input-class="'input'"
                   ></datepicker>
                   <div class="field m-t-md">
-                    <!-- TODO: Implement @change Event -->
-                    <!-- TODO: Bind timeFrom value with v-model -->
-                    <vue-timepicker :minute-interval="10"></vue-timepicker>
+                    <vue-timepicker
+                      @change="changeTime($event, 'timeFrom')"
+                      v-model="meetup.timeFrom"
+                      :minute-interval="10"
+                      hide-clear-button
+                    ></vue-timepicker>
                   </div>
                   <div class="field">
-                    <!-- TODO: Implement @change Event -->
-                    <!-- TODO: Bind timeTo value with v-model -->
-                    <vue-timepicker :minute-interval="10"></vue-timepicker>
+                    <vue-timepicker
+                      @change="changeTime($event, 'timeTo')"
+                      v-model="meetup.timeTo"
+                      :minute-interval="10"
+                      hide-clear-button
+                    ></vue-timepicker>
                   </div>
-                  <!-- TIMES END -->
                 </div>
                 <div class="meetup-side-box-place m-b-sm">
                   <p><b>How to find us</b></p>
                   <div class="field">
-                    <!-- TODO: Bind meetup location -->
-                    <input class="input" type="text" />
+                    <input
+                      v-model="meetup.location"
+                      class="input"
+                      type="text"
+                    />
                   </div>
                 </div>
                 <div class="meetup-side-box-more-info">
                   <p><b>Additional Info</b></p>
                   <div class="field">
-                    <!-- TODO: Bind meetup short info -->
-                    <textarea class="textarea" rows="5"></textarea>
+                    <textarea
+                      v-model="meetup.shortInfo"
+                      class="textarea"
+                      rows="5"
+                    ></textarea>
                   </div>
                 </div>
               </div>
@@ -93,8 +98,11 @@
           <div class="column is-7 is-offset-1">
             <div class="content is-medium">
               <h3 class="title is-3">About the Meetup</h3>
-              <!-- TODO: Bind meetup description -->
-              <textarea class="textarea" rows="5"></textarea>
+              <textarea
+                v-model="meetup.description"
+                class="textarea"
+                rows="5"
+              ></textarea>
             </div>
           </div>
         </div>
@@ -105,13 +113,76 @@
 
 <script>
 import Datepicker from 'vuejs-datepicker';
+import moment from 'moment';
 import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue';
+import { mapActions } from 'vuex';
 export default {
   components: { Datepicker, VueTimepicker },
   props: {
     meetupId: {
       type: String,
       required: true,
+    },
+  },
+
+  created() {
+    this.fetchMeetupHandler();
+  },
+
+  computed: {
+    meetup() {
+      return this.$store.state.meetups.item;
+    },
+
+    meetupCreator() {
+      // #note #good setting initially '{}', to avoid errors (..property of undefined) opt
+      return this.meetup.meetupCreator || {};
+    },
+
+    authUser() {
+      return this.$store.state.auth.user;
+    },
+  },
+
+  data() {
+    return {
+      // #note taken from meetupCreate opt
+      disabledDates: {
+        customPredictor: (date) => {
+          const today = new Date();
+          const yesterday = today.setDate(today.getDate() - 1);
+
+          if (date < yesterday) {
+            return true;
+          }
+        },
+      },
+    };
+  },
+
+  methods: {
+    ...mapActions('meetups', ['fetchMeetup']),
+    fetchMeetupHandler() {
+      this.fetchMeetup(this.meetupId)
+        .then(() => {
+          // #task better to do below's, in router opt
+          if (this.authUser._id !== this.meetupCreator._id) {
+            this.$router.push('/not-authorized');
+          }
+        })
+        .catch((error) => console.error(error));
+    },
+
+    // #note implement parseDate if needed opt
+
+    setDate(date) {
+      this.meetup.startDate = moment(date).format();
+    },
+
+    changeTime({ data }, field) {
+      const hours = data.HH || '00';
+      const minutes = data.mm || '00';
+      this.meetup[field] = `${hours}:${minutes}`;
     },
   },
 };

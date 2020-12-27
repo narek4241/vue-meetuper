@@ -40,6 +40,17 @@ const router = new Router({
       component: PageMeetupEdit,
       meta: { onlyAuthUser: true },
       props: true,
+      // opt rm
+      // beforeEnter: (to, from, next) => {
+      //   const authUser = store.getters['auth/user'];
+      //   // meetup.meetupCreator._id
+
+      //   // if (authUser._id == '5fe707972d927b262d5f408e') {
+      //   //   next();
+      //   // } else {
+      //   //   next({ name: 'PageNotFound' });
+      //   // }
+      // },
     },
     {
       path: '/meetups/:id',
