@@ -70,6 +70,21 @@
                   </div>
                 </div>
                 <div class="meetup-side-box-place m-b-sm">
+                  <p><b>Choose Category</b></p>
+                  <div class="field">
+                    <div class="select">
+                      <select v-model="meetup.category">
+                        <option
+                          v-for="category of categories"
+                          :value="category"
+                          :key="category.id"
+                          >{{ category.name }}</option
+                        >
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="meetup-side-box-place m-b-sm">
                   <p><b>How to find us</b></p>
                   <div class="field">
                     <input
@@ -131,6 +146,7 @@ export default {
 
   created() {
     this.fetchMeetupHandler();
+    this.fetchCategories();
   },
 
   computed: {
@@ -145,6 +161,10 @@ export default {
 
     authUser() {
       return this.$store.state.auth.user;
+    },
+
+    categories() {
+      return this.$store.state.categories.items;
     },
   },
 
@@ -166,6 +186,7 @@ export default {
 
   methods: {
     ...mapActions('meetups', ['fetchMeetup', 'updateMeetup']),
+    ...mapActions('categories', ['fetchCategories']),
     fetchMeetupHandler() {
       this.fetchMeetup(this.meetupId)
         .then(() => {
@@ -196,8 +217,6 @@ export default {
             position: 'top-center',
             duration: 3000,
           });
-          // #task navigate to PageMeetupDeatil instead
-          this.$router.push('/');
         })
         .catch((err) => console.error(err));
     },

@@ -124,20 +124,20 @@ exports.updateMeetup = (req, res) => {
   const { id } = req.params;
   const { user } = req;
 
+  meetup.updateAt = new Date();
+
   // #note user['_id'] returns 'object',but user['_id'] returns needed 'string' opt
   if (user.id === meetup.meetupCreator._id) {
-    Meetup.findByIdAndUpdate(
-      id,
-      { $set: meetup },
-      { new: true },
-      (errors, updatedMeetup) => {
+    Meetup.findByIdAndUpdate(id, { $set: meetup }, { new: true })
+      .populate('meetupCreator')
+      .populate('category')
+      .exec((errors, updatedMeetup) => {
         if (errors) {
           return res.status(422).send(errors);
         }
 
         return res.json(updatedMeetup);
-      }
-    );
+      });
   } else {
     res.status(401).send({ errors: { message: 'Not Authorized' } });
   }
