@@ -1,4 +1,3 @@
-const { json } = require('body-parser');
 const Meetup = require('../models/meetups');
 const User = require('../models/users');
 
@@ -141,4 +140,47 @@ exports.updateMeetup = (req, res) => {
   } else {
     res.status(401).send({ errors: { message: 'Not Authorized' } });
   }
+};
+
+// #note working variant #my opt rm
+// exports.deleteMeetup = async (req, res) => {
+//   const { id } = req.params;
+//   const { user } = req;
+
+//   const meetup = await Meetup.findById(id).populate('meetupCreator');
+
+//   if (user.id === meetup.meetupCreator.id) {
+//     Meetup.findByIdAndDelete(id, (errors, deletedMeetup) => {
+//       if (errors) {
+//         return res.status(422).send(errors);
+//       }
+//       return res.send(deletedMeetup);
+//     });
+//   } else {
+//     return res.status(401).send({ errors: { message: 'Not Authorized' } });
+//   }
+// };
+
+exports.deleteMeetup = (req, res) => {
+  const { id } = req.params;
+  const { user } = req;
+
+  Meetup.findById(id, (errors, meetup) => {
+    if (errors) {
+      return res.status(422).send(errors);
+    }
+
+    if (meetup.meetupCreator != user.id) {
+      return res.status(401).send({ errors: { message: 'Not Authorized' } });
+    }
+
+    // #note findByIdAndDelete also works
+    meetup.remove((errors, _) => {
+      if (errors) {
+        return res.status(422).send(errors);
+      }
+
+      return res.json(meetup);
+    });
+  });
 };

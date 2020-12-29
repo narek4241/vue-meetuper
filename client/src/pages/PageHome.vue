@@ -92,6 +92,14 @@ export default {
         this.pageLoader_resolveData();
       });
   },
+
+  data() {
+    return {
+      // #note avoids opt
+      ipLocation: false,
+    };
+  },
+
   methods: {
     // #task #res explain '...' syntax
     ...mapActions('meetups', ['fetchMeetups']),
