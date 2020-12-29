@@ -1,6 +1,6 @@
 <template>
   <div class="column is-one-third">
-    <div class="card large">
+    <div class="card is-hoverable large">
       <router-link
         :to="{ name: 'PageMeetupDetail', params: { id: meetup._id } }"
       >
@@ -56,3 +56,18 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+.content {
+  color: #000;
+}
+
+.is-hoverable {
+  transition: 0.25s;
+  &:hover {
+    -webkit-box-shadow: 2px 4px 15px -2px rgba(189, 189, 189, 1);
+    -moz-box-shadow: 2px 4px 15px -2px rgba(189, 189, 189, 1);
+    box-shadow: 2px 4px 15px -2px rgba(189, 189, 189, 1);
+  }
+}
+</style>

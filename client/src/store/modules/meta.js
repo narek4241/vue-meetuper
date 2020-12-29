@@ -17,7 +17,9 @@ export default {
     },
     location(state) {
       const { city, country } = state.item;
-      return city && country ? `${city}, ${country}` : null;
+      // return city && country ? `${city}, ${country}` : null;
+      // #task #fix not getting city (maybe issue in geoip pkg)
+      return city && country ? `${city}, ${country}` : `${city}, ${country}`; //
     },
   },
 
