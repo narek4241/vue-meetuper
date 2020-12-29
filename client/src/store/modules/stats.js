@@ -29,8 +29,22 @@ export default {
       });
     },
 
-    updateStats({ commit }, meetupId) {
-      commit('deleteMeetup', meetupId);
+    updateStats({ state, commit }, meetupId) {
+      commit('deleteResource', { resource: 'meetups', itemId: meetupId });
+
+      // #note #good method chaining
+      state.threads.data
+        .filter((thread) => {
+          return thread.meetup == meetupId;
+        })
+        // #note #res3 flatmap, one level is flattened in return opt
+        .flatMap((thread) => {
+          commit('deleteResource', { resource: 'threads', itemId: thread._id });
+          return thread.posts;
+        })
+        .map((postId) => {
+          commit('deleteResource', { resource: 'posts', itemId: postId });
+        });
     },
   },
 
@@ -39,12 +53,12 @@ export default {
       Object.assign(state, stats);
     },
 
-    deleteMeetup(state, meetupId) {
-      const index = state.meetups.data.findIndex(
-        (meetup) => meetup._id === meetupId
+    deleteResource(state, { resource, itemId }) {
+      const index = state[resource].data.findIndex(
+        (item) => item._id === itemId
       );
-      state.meetups.data.splice(index, 1);
-      state.meetups.count--;
+      state[resource].data.splice(index, 1);
+      state[resource].count--;
     },
   },
 };

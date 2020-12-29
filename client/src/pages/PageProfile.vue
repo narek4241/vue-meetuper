@@ -222,14 +222,13 @@ export default {
           .then((deletedMeetupId) => {
             this.$store.dispatch('stats/updateStats', deletedMeetupId);
 
-            this.$toasted
-              .show('Meetup Successfully Deleted', {
-                position: 'top-center',
-                duration: 3000,
-              })
-              .catch((err) => {
-                console.error(err);
-              });
+            this.$toasted.success('Meetup Successfully Deleted', {
+              position: 'top-center',
+              duration: 3000,
+            });
+          })
+          .catch((err) => {
+            console.error(err);
           });
       } else {
         return;
