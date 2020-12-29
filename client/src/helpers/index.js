@@ -41,3 +41,9 @@ export const applyFilters = (url, filter) => {
 
   return url;
 };
+
+export const processLocation = (location) =>
+  location
+    .toLowerCase()
+    .replace(/[\s,]+/g, '')
+    .trim();

@@ -4,7 +4,9 @@
     <div v-if="pageLoader_isDataLoaded" class="container">
       <section class="section">
         <div class="m-b-lg">
-          <h1 class="title is-inline">Featured Meetups in "Location"</h1>
+          <h1 class="title is-inline">
+            Featured Meetups <span v-if="ipLocation">in {{ ipLocation }}</span>
+          </h1>
           <AppDropdown />
           <router-link
             v-if="isAuthenticated"
@@ -54,6 +56,7 @@ import MeetupItem from '../components/MeetupItem';
 import AppSpinner from '../components/shared/AppSpinner';
 import { mapState, mapActions, mapGetters } from 'vuex';
 import pageLoader from '../mixins/pageLoader';
+// import { processLocation } from '@/helpers';
 
 export default {
   components: { CategoryItem, MeetupItem, AppSpinner },
@@ -63,6 +66,8 @@ export default {
   computed: {
     ...mapGetters({
       isAuthenticated: 'auth/isAuthenticated',
+      // #note meetups by location,also need to provide filter to fetchMeetups
+      // ipLocation: 'meta/location',
     }),
     ...mapState({
       meetups: (state) => state.meetups.items,
@@ -71,7 +76,13 @@ export default {
   },
 
   created() {
-    Promise.all([this.fetchMeetups(), this.fetchCategories()])
+    const filter = {};
+    // #note meetups by location
+    // if (this.ipLocation) {
+    //   filter.location = processLocation(this.ipLocation);
+    // }
+
+    Promise.all([this.fetchMeetups({ filter }), this.fetchCategories()])
       .then(() => {
         this.isDataLoaded = true;
         this.pageLoader_resolveData();
