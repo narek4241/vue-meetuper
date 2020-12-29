@@ -71,6 +71,13 @@ export default {
         });
     },
 
+    deleteMeetup(context, meetupId) {
+      return axiosInstance.delete(`/api/v1/meetups/${meetupId}`).then((res) => {
+        const deletedMeetupId = res.data;
+        return deletedMeetupId;
+      });
+    },
+
     joinMeetup({ rootState, state, dispatch, commit }, meetupId) {
       const user = rootState.auth.user;
 

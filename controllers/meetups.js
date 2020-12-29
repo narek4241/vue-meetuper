@@ -180,7 +180,7 @@ exports.deleteMeetup = (req, res) => {
         return res.status(422).send(errors);
       }
 
-      return res.json(meetup);
+      return res.json(meetup._id);
     });
   });
 };

@@ -97,7 +97,11 @@
                   class="card-footer-item"
                   >Edit</router-link
                 >
-                <a class="card-footer-item">Delete</a>
+                <a
+                  @click.prevent="deleteMeetup($event, meetup._id)"
+                  class="card-footer-item delete-item"
+                  >Delete</a
+                >
               </footer>
             </div>
             <br />
@@ -203,6 +207,34 @@ export default {
           done();
         });
     },
+
+    deleteMeetup(e, meetupId) {
+      // #task #res usage
+      e.stopPropagation();
+
+      const isConfirmed = confirm(
+        'Are you sure you want to delete this meetup ?'
+      );
+
+      if (isConfirmed) {
+        this.$store
+          .dispatch('meetups/deleteMeetup', meetupId)
+          .then((deletedMeetupId) => {
+            this.$store.dispatch('stats/updateStats', deletedMeetupId);
+
+            this.$toasted
+              .show('Meetup Successfully Deleted', {
+                position: 'top-center',
+                duration: 3000,
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+          });
+      } else {
+        return;
+      }
+    },
   },
 };
 </script>
@@ -210,6 +242,10 @@ export default {
 <style scoped>
 body {
   background: #f5f7fa;
+}
+
+.delete-item {
+  color: red;
 }
 
 .stats-tab {
