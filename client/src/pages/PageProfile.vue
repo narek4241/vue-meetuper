@@ -55,108 +55,19 @@
       </div>
 
       <div v-if="activeTab === 'meetups'">
-        <div
-          v-for="meetup in meetups"
-          :key="meetup._id"
-          class="columns is-mobile is-multiline"
-        >
-          <div class="column is-3-tablet is-6-mobile">
-            <div class="card">
-              <router-link
-                :to="{ name: 'PageMeetupDetail', params: { id: meetup._id } }"
-              >
-                <div class="card-image">
-                  <figure class="image is-4by3">
-                    <img :src="meetup.image" />
-                  </figure>
-                </div>
-                <div class="card-content">
-                  <div class="media">
-                    <div class="media-content">
-                      <p class="title is-4">{{ meetup.title }}</p>
-                      <p class="subtitle is-6">
-                        <span class="tag is-dark subtitle">{{
-                          meetup.category.name | capitalize
-                        }}</span>
-                      </p>
-                    </div>
-                  </div>
-                  <div class="content">
-                    <p>
-                      {{ meetup.shortInfo }}
-                    </p>
-                  </div>
-                </div>
-              </router-link>
-              <footer class="card-footer">
-                <router-link
-                  :to="{
-                    name: 'PageMeetupEdit',
-                    params: { meetupId: meetup._id },
-                  }"
-                  class="card-footer-item"
-                  >Edit</router-link
-                >
-                <a
-                  @click.prevent="deleteMeetup($event, meetup._id)"
-                  class="card-footer-item delete-item"
-                  >Delete</a
-                >
-              </footer>
-            </div>
-            <br />
-          </div>
-        </div>
+        <profile-meetups
+          @onDelete="deleteMeetup"
+          :isDataLoaded="pageLoader_isDataLoaded"
+          :meetups="meetups"
+        ></profile-meetups>
       </div>
 
       <div v-if="activeTab === 'threads'">
-        <div
-          v-for="thread in threads"
-          :key="thread._id"
-          class="columns is-mobile is-multiline"
-        >
-          <div class="column is-3-tablet is-6-mobile">
-            <div class="card">
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-content">
-                    <p class="title is-4">{{ thread.title }}</p>
-                  </div>
-                </div>
-              </div>
-              <footer class="card-footer">
-                <a class="card-footer-item">Share</a>
-                <a class="card-footer-item">Delete</a>
-              </footer>
-            </div>
-            <br />
-          </div>
-        </div>
+        <profile-threads :threads="threads"></profile-threads>
       </div>
 
       <div v-if="activeTab === 'posts'">
-        <div
-          v-for="post in posts"
-          :key="post._id"
-          class="columns is-mobile is-multiline"
-        >
-          <div class="column is-3-tablet is-6-mobile">
-            <div class="card">
-              <div class="card-content">
-                <div class="media">
-                  <div class="media-content">
-                    <p class="title is-4">{{ post.text }}</p>
-                  </div>
-                </div>
-              </div>
-              <footer class="card-footer">
-                <a class="card-footer-item">Share</a>
-                <a class="card-footer-item">Delete</a>
-              </footer>
-            </div>
-            <br />
-          </div>
-        </div>
+        <profile-posts :posts="posts"></profile-posts>
       </div>
     </div>
   </div>
@@ -165,12 +76,25 @@
 <script>
 import { mapState } from 'vuex';
 import UserUpdateModal from '@/components/UserUpdateModal';
+import ProfileMeetups from '@/components/Profile/ProfileMeetups';
+import ProfileThreads from '@/components/Profile/ProfileThreads';
+import ProfilePosts from '@/components/Profile/ProfilePosts';
+import pageLoader from '@/mixins/pageLoader';
 
 export default {
-  components: { UserUpdateModal },
+  components: { UserUpdateModal, ProfileMeetups, ProfileThreads, ProfilePosts },
+
+  mixins: [pageLoader],
 
   created() {
-    this.$store.dispatch('stats/fetchUserStats');
+    this.$store
+      .dispatch('stats/fetchUserStats')
+      .then(() => {
+        this.pageLoader_resolveData();
+      })
+      .catch(() => {
+        this.pageLoader_resolveData();
+      });
   },
 
   computed: {
@@ -208,7 +132,7 @@ export default {
         });
     },
 
-    deleteMeetup(e, meetupId) {
+    deleteMeetup({ e, meetupId }) {
       // #task #res usage
       e.stopPropagation();
 
@@ -241,10 +165,6 @@ export default {
 <style scoped>
 body {
   background: #f5f7fa;
-}
-
-.delete-item {
-  color: red;
 }
 
 .stats-tab {
