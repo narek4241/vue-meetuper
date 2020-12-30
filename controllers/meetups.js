@@ -4,6 +4,10 @@ const User = require('../models/users');
 exports.getMeetups = (req, res) => {
   const { category, location } = req.query;
 
+  const pageSize = parseInt(req.query.pageSize) || 6;
+  const pageNumber = parseInt(req.query.pageNumber) || 1;
+  const skips = pageSize * (pageNumber - 1);
+
   const findQuery = location
     ? // #note '.*' every character 0 || 0+ times
       Meetup.find({ processedLocation: { $regex: '.*' + location + '.*' } })
@@ -12,7 +16,8 @@ exports.getMeetups = (req, res) => {
   findQuery
     .populate('category')
     .populate('joinedPeople')
-    .limit(5)
+    .skip(skips)
+    .limit(pageSize)
     .sort({ createdAt: -1 })
     .exec((errors, meetups) => {
       if (errors) {
@@ -22,7 +27,15 @@ exports.getMeetups = (req, res) => {
       if (category) {
         meetups = meetups.filter((meetup) => meetup.category.name === category);
       }
-      return res.json(meetups);
+
+      Meetup.count({}).then((count) => {
+        return res.json({
+          // #task #findOut splice usage here opt
+          meetups: meetups.splice(0, pageSize),
+          count,
+          pageCount: count / pageSize,
+        });
+      });
     });
 };
 
@@ -141,25 +154,6 @@ exports.updateMeetup = (req, res) => {
     res.status(401).send({ errors: { message: 'Not Authorized' } });
   }
 };
-
-// #note working variant #my opt rm
-// exports.deleteMeetup = async (req, res) => {
-//   const { id } = req.params;
-//   const { user } = req;
-
-//   const meetup = await Meetup.findById(id).populate('meetupCreator');
-
-//   if (user.id === meetup.meetupCreator.id) {
-//     Meetup.findByIdAndDelete(id, (errors, deletedMeetup) => {
-//       if (errors) {
-//         return res.status(422).send(errors);
-//       }
-//       return res.send(deletedMeetup);
-//     });
-//   } else {
-//     return res.status(401).send({ errors: { message: 'Not Authorized' } });
-//   }
-// };
 
 exports.deleteMeetup = (req, res) => {
   const { id } = req.params;
