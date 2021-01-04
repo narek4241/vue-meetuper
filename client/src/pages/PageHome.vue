@@ -24,11 +24,16 @@
         </div>
 
         <div class="row columns meetups-collection">
-          <meetup-item
-            v-for="meetup in meetups"
-            :key="meetup._id"
-            :meetup="meetup"
-          ></meetup-item>
+          <template v-if="isPaginatedMeetupsLoaded">
+            <meetup-item
+              v-for="meetup in meetups"
+              :key="meetup._id"
+              :meetup="meetup"
+            ></meetup-item>
+          </template>
+          <template v-else>
+            <app-spinner />
+          </template>
           <!-- #task #res3 template usage here -->
           <template v-if="pagination.pageCount != 1">
             <pagination
@@ -114,6 +119,7 @@ export default {
     return {
       // #note avoids opt
       ipLocation: false,
+      isPaginatedMeetupsLoaded: true,
     };
   },
 
@@ -136,8 +142,14 @@ export default {
     },
 
     fetchPaginatedMeetups(customPageNumber) {
-      this.setPage(customPageNumber);
-      this.handleFetchMeetups({ reset: false });
+      (this.isPaginatedMeetupsLoaded = false),
+        Promise.all([
+          this.setPage(customPageNumber),
+          // #note 'finally', doesn't matter resolved or rejected opt
+          this.handleFetchMeetups({ reset: false }).finally(() => {
+            this.isPaginatedMeetupsLoaded = true;
+          }),
+        ]);
     },
 
     setPaginationQueryParams() {
