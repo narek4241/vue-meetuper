@@ -10,6 +10,7 @@ import AppHero from './components/shared/AppHero';
 import AppSpinner from './components/shared/AppSpinner';
 import toasted from 'vue-toasted';
 import AppSocket from './plugins/socket';
+import Paginate from 'vuejs-paginate';
 
 Vue.config.productionTip = false;
 
@@ -17,6 +18,7 @@ Vue.config.productionTip = false;
 Vue.component('AppSpinner', AppSpinner);
 Vue.component('AppHero', AppHero);
 Vue.component('AppDropdown', AppDropdown);
+Vue.component('paginate', Paginate);
 
 Vue.use(vuelidate);
 Vue.use(toasted);

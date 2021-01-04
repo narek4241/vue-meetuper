@@ -23,12 +23,13 @@
           >
         </div>
 
-        <div class="row columns">
+        <div class="row columns meetups-collection">
           <meetup-item
             v-for="meetup in meetups"
             :key="meetup._id"
             :meetup="meetup"
           ></meetup-item>
+          <pagination :page-count="10" :click-handler="() => {}"></pagination>
         </div>
       </section>
       <section class="section">
@@ -51,15 +52,16 @@
 </template>
 
 <script>
-import CategoryItem from '../components/CategoryItem';
-import MeetupItem from '../components/MeetupItem';
-import AppSpinner from '../components/shared/AppSpinner';
+import CategoryItem from '@/components/CategoryItem';
+import MeetupItem from '@/components/MeetupItem';
+import AppSpinner from '@/components/shared/AppSpinner';
 import { mapState, mapActions, mapGetters } from 'vuex';
-import pageLoader from '../mixins/pageLoader';
+import pageLoader from '@/mixins/pageLoader';
+import Pagination from '@/components/Pagination';
 // import { processLocation } from '@/helpers';
 
 export default {
-  components: { CategoryItem, MeetupItem, AppSpinner },
+  components: { CategoryItem, MeetupItem, AppSpinner, Pagination },
 
   mixins: [pageLoader],
 
@@ -109,9 +111,7 @@ export default {
 </script>
 
 <style scoped>
-/* #note possible side-effects */
-.row,
-.columns {
+.meetups-collection {
   flex-wrap: wrap;
 }
 </style>

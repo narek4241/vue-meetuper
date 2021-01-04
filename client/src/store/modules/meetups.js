@@ -19,7 +19,7 @@ export default {
       const url = applyFilters('/api/v1/meetups', options.filter);
 
       return axios.get(url).then((res) => {
-        const meetups = res.data;
+        const { meetups } = res.data;
         commit(
           'setItems',
           { resource: 'meetups', items: meetups },
