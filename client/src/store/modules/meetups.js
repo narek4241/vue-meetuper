@@ -10,22 +10,30 @@ export default {
   state: {
     items: [],
     item: {},
+    pagination: {
+      count: 0,
+      pageCount: 0,
+      pageSize: 6,
+      pageNumber: 1,
+    },
   },
 
   actions: {
-    fetchMeetups({ state, commit }, options = {}) {
-      commit('setItems', { resource: 'meetups', item: [] }, { root: true });
+    fetchMeetups({ state, commit }, options = { reset: true }) {
+      if (options.reset) {
+        commit('setItems', { resource: 'meetups', item: [] }, { root: true });
+      }
 
       const url = applyFilters('/api/v1/meetups', options.filter);
 
       return axios.get(url).then((res) => {
-        const { meetups } = res.data;
+        const { meetups, count, pageCount } = res.data;
         commit(
           'setItems',
           { resource: 'meetups', items: meetups },
           { root: true }
         );
-        // #task #findOut2 whether 'context'({state,commit}) is local(meetups.js) or global(index.js) object
+        commit('setPagination', { count, pageCount });
         return state.items;
       });
     },
@@ -117,6 +125,15 @@ export default {
 
     mergeMeetup(state, updatedMeetup) {
       state.item = { ...state.item, ...updatedMeetup };
+    },
+
+    setPagination({ pagination }, { count, pageCount }) {
+      Vue.set(pagination, 'count', count);
+      Vue.set(pagination, 'pageCount', pageCount);
+    },
+
+    setPage({ pagination }, page) {
+      Vue.set(pagination, 'pageNumber', page);
     },
   },
 };

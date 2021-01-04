@@ -33,7 +33,7 @@ exports.getMeetups = (req, res) => {
           // #task #findOut splice usage here opt
           meetups: meetups.splice(0, pageSize),
           count,
-          pageCount: count / pageSize,
+          pageCount: Math.ceil(count / pageSize),
         });
       });
     });

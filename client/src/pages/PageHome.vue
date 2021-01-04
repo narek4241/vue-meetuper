@@ -29,7 +29,10 @@
             :key="meetup._id"
             :meetup="meetup"
           ></meetup-item>
-          <pagination :page-count="10" :click-handler="() => {}"></pagination>
+          <pagination
+            :page-count="pagination.pageCount"
+            :click-handler="fetchPaginatedMeetups"
+          ></pagination>
         </div>
       </section>
       <section class="section">
@@ -74,17 +77,18 @@ export default {
     ...mapState({
       meetups: (state) => state.meetups.items,
       categories: (state) => state.categories.items,
+      pagination: (state) => state.meetups.pagination,
     }),
   },
 
   created() {
-    const filter = {};
     // #note meetups by location
+    // const filter = {};
     // if (this.ipLocation) {
     //   filter.location = processLocation(this.ipLocation);
     // }
 
-    Promise.all([this.fetchMeetups({ filter }), this.fetchCategories()])
+    Promise.all([this.handleFetchMeetups({}), this.fetchCategories()])
       .then(() => {
         this.isDataLoaded = true;
         this.pageLoader_resolveData();
@@ -106,6 +110,22 @@ export default {
     // #task #res explain '...' syntax
     ...mapActions('meetups', ['fetchMeetups']),
     ...mapActions('categories', ['fetchCategories']),
+
+    handleFetchMeetups({ reset }) {
+      const filters = {};
+      filters.pageSize = this.pagination.pageSize;
+      filters.pageNumber = this.pagination.pageNumber;
+      return this.fetchMeetups({ filter: filters, reset });
+    },
+
+    setPage(pageNumber) {
+      this.$store.commit('meetups/setPage', pageNumber);
+    },
+
+    fetchPaginatedMeetups(customPageNumber) {
+      this.setPage(customPageNumber);
+      this.handleFetchMeetups({ reset: false });
+    },
   },
 };
 </script>
