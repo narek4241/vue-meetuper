@@ -1,19 +1,26 @@
 <template>
-  <paginate
-    :page-count="pageCount"
-    :click-handler="clickHandler"
-    :prev-text="prevText"
-    :next-text="nextText"
-    :container-class="'paginationContainer'"
-  >
-  </paginate>
+  <div class="pagination-container-wrapper">
+    <!-- #note 'v-model' replaced by 'value' opt -->
+    <paginate
+      :value="pageNumber"
+      :page-count="pageCount"
+      :click-handler="clickHandler"
+      :prev-text="prevText"
+      :next-text="nextText"
+      :container-class="'paginationContainer'"
+    >
+    </paginate>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
+    page: {
+      required: false,
+    },
+
     pageCount: {
-      type: Number,
       required: true,
     },
 
@@ -34,10 +41,23 @@ export default {
       default: 'Next',
     },
   },
+
+  computed: {
+    pageNumber() {
+      return parseInt(this.page);
+    },
+  },
 };
 </script>
 
 <style lang="scss">
+.pagination-container-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 // #note taken opt
 .paginationContainer {
   display: inline-block;
@@ -59,6 +79,7 @@ export default {
       text-decoration: none;
       background-color: #fff;
       border: 1px solid #ddd;
+      outline: 0;
     }
 
     &.active {

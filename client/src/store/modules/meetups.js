@@ -117,6 +117,11 @@ export default {
           return true;
         });
     },
+
+    initalizePagesFromQuery({ commit }, { pageSize, pageNumber }) {
+      commit('setPage', pageNumber);
+      commit('setPageSize', pageSize);
+    },
   },
   mutations: {
     addUsersToMeetup({ item }, joinedPeople) {
@@ -134,6 +139,10 @@ export default {
 
     setPage({ pagination }, page) {
       Vue.set(pagination, 'pageNumber', page);
+    },
+
+    setPageSize({ pagination }, pageSize) {
+      Vue.set(pagination, 'pageSize', pageSize);
     },
   },
 };

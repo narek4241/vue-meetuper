@@ -29,10 +29,14 @@
             :key="meetup._id"
             :meetup="meetup"
           ></meetup-item>
-          <pagination
-            :page-count="pagination.pageCount"
-            :click-handler="fetchPaginatedMeetups"
-          ></pagination>
+          <!-- #task #res3 template usage here -->
+          <template v-if="pagination.pageCount != 1">
+            <pagination
+              :page="pagination.pageNumber"
+              :page-count="pagination.pageCount"
+              :click-handler="fetchPaginatedMeetups"
+            ></pagination>
+          </template>
         </div>
       </section>
       <section class="section">
@@ -82,6 +86,13 @@ export default {
   },
 
   created() {
+    const { pageSize, pageNumber } = this.$route.query;
+
+    // #note persisting 'meetup pagination page' by queries opt
+    if (pageSize && pageNumber) {
+      this.initalizePagesFromQuery({ pageSize, pageNumber });
+    }
+
     // #note meetups by location
     // const filter = {};
     // if (this.ipLocation) {
@@ -108,14 +119,16 @@ export default {
 
   methods: {
     // #task #res explain '...' syntax
-    ...mapActions('meetups', ['fetchMeetups']),
+    ...mapActions('meetups', ['fetchMeetups', 'initalizePagesFromQuery']),
     ...mapActions('categories', ['fetchCategories']),
 
     handleFetchMeetups({ reset }) {
       const filters = {};
       filters.pageSize = this.pagination.pageSize;
       filters.pageNumber = this.pagination.pageNumber;
-      return this.fetchMeetups({ filter: filters, reset });
+      return this.fetchMeetups({ filter: filters, reset }).then(() =>
+        this.setPaginationQueryParams()
+      );
     },
 
     setPage(pageNumber) {
@@ -125,6 +138,17 @@ export default {
     fetchPaginatedMeetups(customPageNumber) {
       this.setPage(customPageNumber);
       this.handleFetchMeetups({ reset: false });
+    },
+
+    setPaginationQueryParams() {
+      const { pageSize, pageNumber } = this.pagination;
+      // #note checking route changed or not.(otherwise gives an error) opt
+      if (
+        JSON.stringify({ pageSize, pageNumber }) !=
+        JSON.stringify(this.$route.query)
+      ) {
+        this.$router.push({ query: { pageSize, pageNumber } });
+      }
     },
   },
 };
