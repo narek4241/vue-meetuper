@@ -4,6 +4,7 @@ const Meetup = require('../models/meetups');
 const Thread = require('../models/threads');
 const Post = require('../models/posts');
 const Category = require('../models/categories');
+const ConfirmationHash = require('../models/confirmation-hash');
 
 exports.getUsers = function (req, res) {
   User.find({}).exec((errors, users) => {
@@ -53,10 +54,21 @@ exports.register = async (req, res) => {
     }
 
     const user = new User(registerData);
-    const data = await user.save();
 
-    // #note password hashing could be also here rm
-    res.send(data);
+    return user.save((errors, savedUser) => {
+      if (errors) {
+        return res.status(422).send(errors);
+      }
+
+      const hash = new ConfirmationHash({ user: savedUser });
+
+      hash.save((errors, createdHash) => {
+        if (errors) {
+          return res.status(422).send(errors);
+        }
+        return res.send(savedUser);
+      });
+    });
   } catch (error) {
     console.log(error);
     // res.status(400).send('Something went wrong');
@@ -97,7 +109,15 @@ exports.login = async (req, res, next) => {
       //   return res.json(passportUser);
       // });
 
-      return res.json(passportUser.toAuthJSON());
+      if (passportUser.active) {
+        return res.json(passportUser.toAuthJSON());
+      } else {
+        return res.status(422).send({
+          errors: {
+            message: 'Plaesa check your Email, in order to Activate account',
+          },
+        });
+      }
     } else {
       return res.status(422).send({
         errors: {

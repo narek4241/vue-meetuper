@@ -36,6 +36,7 @@ const userSchema = new Schema({
   info: String,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  active: { type: Boolean, default: false },
   joinedMeetups: [{ type: Schema.Types.ObjectId, ref: 'Meetup' }],
 });
 

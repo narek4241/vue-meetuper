@@ -154,11 +154,10 @@ export default {
 
     setPaginationQueryParams() {
       const { pageSize, pageNumber } = this.pagination;
-      // #note checking route changed or not.(otherwise gives an error) opt
-      if (
-        JSON.stringify({ pageSize, pageNumber }) !=
-        JSON.stringify(this.$route.query)
-      ) {
+      // #note checking wh. new route differs or not(otherwise gives an error) opt
+      const currentQuery = JSON.stringify(this.$route.query);
+      const newQuery = JSON.stringify({ pageSize, pageNumber });
+      if (newQuery != currentQuery) {
         this.$router.push({ query: { pageSize, pageNumber } });
       }
     },
