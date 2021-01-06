@@ -5,6 +5,7 @@ const Thread = require('../models/threads');
 const Post = require('../models/posts');
 const Category = require('../models/categories');
 const ConfirmationHash = require('../models/confirmation-hash');
+const sendConfirmationMail = require('../services/mail');
 
 exports.getUsers = function (req, res) {
   User.find({}).exec((errors, users) => {
@@ -62,11 +63,23 @@ exports.register = async (req, res) => {
 
       const hash = new ConfirmationHash({ user: savedUser });
 
-      hash.save((errors, createdHash) => {
+      hash.save((errors, _) => {
         if (errors) {
           return res.status(422).send(errors);
         }
-        return res.send(savedUser);
+
+        sendConfirmationMail(
+          { toUser: savedUser, hash: hash._id },
+          (errors, _) => {
+            if (errors) {
+              console.log(errors); //rm
+              // #task #2 #dpl #findOut return or not (wh. leads to error or not ) opt
+              res.status(422).send(errors);
+            }
+            // #task #findOut return or not (wh. leads to error or not ) opt
+            res.send(savedUser);
+          }
+        );
       });
     });
   } catch (error) {
@@ -114,7 +127,7 @@ exports.login = async (req, res, next) => {
       } else {
         return res.status(422).send({
           errors: {
-            message: 'Plaesa check your Email, in order to Activate account',
+            message: 'Please check your Email, in order to Activate account',
           },
         });
       }
