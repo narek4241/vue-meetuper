@@ -12,6 +12,7 @@ import PageLogin from '@/pages/PageLogin';
 import PageProfile from '@/pages/PageProfile';
 import PageNotFound from '@/pages/PageNotFound';
 import PageNotAuthenticated from '@/pages/PageNotAuthenticated';
+import PageUserActivate from '@/pages/PageUserActivate';
 
 Vue.use(Router);
 
@@ -103,6 +104,13 @@ const router = new Router({
       component: PageRegister,
       meta: { onlyGuestUser: true },
     },
+
+    {
+      path: '/:hash/activate',
+      name: 'PageUserActivate',
+      component: PageUserActivate,
+    },
+
     {
       path: '/login',
       name: 'PageLogin',

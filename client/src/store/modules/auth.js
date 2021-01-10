@@ -137,6 +137,10 @@ export default {
       meetups.splice(index, 1);
       commit('setMeetupsToAuthUser', meetups);
     },
+
+    activateUser(_, hash) {
+      alert(`hash is ${hash}`);
+    },
   },
 
   mutations: {
