@@ -1,5 +1,5 @@
 node_modules
-config.js
+config/dev.js
 .idea
 .DS_Store
 .vscode
