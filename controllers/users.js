@@ -241,6 +241,33 @@ exports.getUserActivity = (req, res) => {
     .catch((err) => res.status(422).send(err));
 };
 
+exports.activateUser = (req, res) => {
+  const { hash } = req.params;
+
+  ConfirmationHash.findById(hash)
+    .populate('user')
+    .exec((errors, foundHash) => {
+      if (errors) {
+        return res.status(422).send(errors);
+      }
+
+      User.findByIdAndUpdate(
+        foundHash.user._id,
+        { $set: { active: true } },
+        { new: true },
+        (errors, updatedUser) => {
+          if (errors) {
+            return res.status(422).send(errors);
+          }
+
+          foundHash.remove();
+
+          return res.send(updatedUser);
+        }
+      );
+    });
+};
+
 exports.updateUser = (req, res) => {
   const userId = req.params.id;
   const user = req.user;
