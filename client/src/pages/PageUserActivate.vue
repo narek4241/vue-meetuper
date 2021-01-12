@@ -21,7 +21,10 @@ export default {
   methods: {
     activateUser() {
       const { hash } = this.$route.params;
-      this.$store.dispatch('auth/activateUser', hash);
+      this.$store
+        .dispatch('auth/activateUser', hash)
+        .then(() => this.$router.push('/login'))
+        .catch((err) => console.error(err));
     },
   },
 };

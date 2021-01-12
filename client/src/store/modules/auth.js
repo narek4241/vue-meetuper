@@ -139,7 +139,7 @@ export default {
     },
 
     activateUser(_, hash) {
-      alert(`hash is ${hash}`);
+      return axios.patch(`/api/v1/users/${hash}/activate`);
     },
   },
 
