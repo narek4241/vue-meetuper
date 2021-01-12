@@ -72,12 +72,9 @@ exports.register = async (req, res) => {
           { toUser: savedUser, hash: hash._id },
           (errors, _) => {
             if (errors) {
-              console.log(errors); //rm
-              // #task #2 #dpl #findOut return or not (wh. leads to error or not ) opt
-              res.status(422).send(errors);
+              return res.status(422).send(errors);
             }
-            // #task #findOut return or not (wh. leads to error or not ) opt
-            res.send(savedUser);
+            return res.send(savedUser);
           }
         );
       });
