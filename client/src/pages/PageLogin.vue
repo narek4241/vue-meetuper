@@ -79,6 +79,7 @@
 
 <script>
 import { required, email, minLength } from 'vuelidate/lib/validators';
+import { REDIRECT_MESSAGES } from '@/helpers/redirectMessages';
 export default {
   data() {
     return {
@@ -93,6 +94,20 @@ export default {
     isFormValid() {
       return !this.$v.form.$invalid;
     },
+  },
+
+  created() {
+    const { messageType } = this.$route.query;
+    if (!messageType) {
+      return;
+    }
+
+    const { message } = REDIRECT_MESSAGES[messageType];
+    this.$toasted.success(message, {
+      position: 'top-center',
+      duration: 5000,
+    });
+    this.$router.push({ query: null });
   },
 
   // #note validation done in both [client, server] (complete each other) opt

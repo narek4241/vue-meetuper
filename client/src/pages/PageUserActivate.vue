@@ -11,6 +11,7 @@
 
 <script>
 import AppSpinner from '@/components/shared/AppSpinner';
+import { USER_ACTIVATED } from '@/helpers/redirectMessages';
 export default {
   components: { AppSpinner },
 
@@ -23,7 +24,12 @@ export default {
       const { hash } = this.$route.params;
       this.$store
         .dispatch('auth/activateUser', hash)
-        .then(() => this.$router.push('/login'))
+        .then(() => {
+          this.$router.push({
+            path: '/login',
+            query: { messageType: USER_ACTIVATED.type },
+          });
+        })
         .catch((err) => console.error(err));
     },
   },
